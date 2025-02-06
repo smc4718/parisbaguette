@@ -1,0 +1,4 @@
+# mybatis
+mybatis:
+  config-location: mybatis/config/mybatis-config.xml
+  mapper-locations: mybatis/mapper/*.xml
