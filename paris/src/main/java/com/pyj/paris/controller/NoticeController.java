@@ -1,7 +1,6 @@
 package com.pyj.paris.controller;
 
 import com.pyj.paris.dao.NoticeMapper;
-import com.pyj.paris.dto.NoticeDto;
 import com.pyj.paris.service.NoticeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @RequestMapping("/notice")
 @RequiredArgsConstructor

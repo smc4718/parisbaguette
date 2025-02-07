@@ -53,7 +53,7 @@ public class NoticeServiceImpl implements NoticeService {
     public int addNotice(HttpServletRequest request) {
         String title = request.getParameter("title");
         String contents = request.getParameter("contents");
-        int userNo = Integer.parseInt((request.getParameter("userNo")));
+        int userNo = Integer.parseInt(request.getParameter("userNo"));
 
         NoticeDto notice = NoticeDto.builder()
                 .title(title)

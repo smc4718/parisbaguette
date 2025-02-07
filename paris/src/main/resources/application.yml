@@ -1,4 +1,18 @@
+# Connection Pool, 오라클DB 연결 정보
+spring:
+  datasource:
+    hikari:
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      jdbc-url: jdbc:oracle:thin:@localhost:1521:xe
+      username: PB
+      password: 1735
+
 # mybatis
 mybatis:
   config-location: mybatis/config/mybatis-config.xml
   mapper-locations: mybatis/mapper/*.xml
+
+# jasypt
+  #jasypt:
+    # encryptor:
+  #  password: encryptKey
