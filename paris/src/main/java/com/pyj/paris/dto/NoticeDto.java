@@ -15,5 +15,4 @@ public class NoticeDto {
     private String contents;
     private int hit;
     private String createdAt;
-    private UserDto userDto;
 }

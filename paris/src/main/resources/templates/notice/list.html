@@ -10,13 +10,13 @@
     <tr>
         <th>번호</th>
         <th>제목</th>
-        <th>작성자</th>
+        <th>조회수</th>
         <th>작성일</th>
     </tr>
     <tr th:each="notice : ${noticeList}">
         <td th:text="${notice.noticeNo}"></td>
         <td><a th:href="@{/notice/detail.do(noticeNo=${notice.noticeNo})}" th:text="${notice.title}"></a></td>
-        <td th:text="${notice.userDto.name}"></td>
+        <td th:text="${notice.hit}"></td>
         <td th:text="${notice.createdAt}"></td>
     </tr>
 </table>

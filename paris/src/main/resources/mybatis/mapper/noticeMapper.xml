@@ -11,15 +11,6 @@
         <result column="CONTENTS"   property="contents" />
         <result column="HIT"        property="hit" />
         <result column="CREATED_AT" property="createdAt" />
-        <association javaType="UserDto"  property="userDto">
-            <id      column="USER_NO"    property="userNo" />
-            <result  column="EMAIL"      property="email" />
-            <result  column="PW"         property="pw" />
-            <result  column="NAME"       property="name" />
-            <result  column="GENDER"     property="gender" />
-            <result  column="MOBILE"     property="mobile" />
-            <result  column="JOINED_AT"  property="joinedAt" />
-        </association>
     </resultMap>
 
     <!-- 공지 갯수 -->
@@ -30,8 +21,8 @@
 
     <!-- 공지 리스트 -->
     <select id="getNoticeList" parameterType="Map" resultType="NoticeDto">
-        SELECT NOTICE_NO, USER_NO, TITLE, CONTENTS, HIT, CREATED_AT
-          FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, USER_NO, TITLE, CONTENTS, HIT, CREATED_AT
+        SELECT NOTICE_NO, TITLE, CONTENTS, HIT, CREATED_AT
+          FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, HIT, CREATED_AT
                   FROM NOTICE_T) NU
          WHERE RN BETWEEN #{begin} AND #{end}
     </select>
@@ -44,24 +35,22 @@
         </selectKey>
         INSERT INTO NOTICE_T(
             NOTICE_NO
-          , USER_NO
           , TITLE
           , CONTENTS
           , HIT
           , CREATED_AT
         ) VALUES (
             #{noticeNo}
-          , #{userDto.userNo}
           , #{title}
           , #{contents}
-          , #{hit}
-          , #{createdAt}
+          , NVL(#{hit}, 0) <!-- 기본값 0 -->
+          , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS') <!-- 현재 시간 설정 -->
         )
     </insert>
 
     <!-- 공지 상세 -->
     <select id="getNotice" parameterType="int" resultMap="NoticeMap">
-        SELECT NOTICE_NO, USER_NO, TITLE, CONTENTS, HIT, CREATED_AT
+        SELECT NOTICE_NO, TITLE, CONTENTS, HIT, CREATED_AT
           FROM NOTICE_T
          WHERE NOTICE_NO = #{noticeNo}
     </select>

@@ -2,14 +2,16 @@ package com.pyj.paris.service;
 
 import com.pyj.paris.dao.NoticeMapper;
 import com.pyj.paris.dto.NoticeDto;
-import com.pyj.paris.dto.UserDto;
 import com.pyj.paris.util.MyPageUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -53,18 +55,19 @@ public class NoticeServiceImpl implements NoticeService {
     public int addNotice(HttpServletRequest request) {
         String title = request.getParameter("title");
         String contents = request.getParameter("contents");
-        int userNo = Integer.parseInt(request.getParameter("userNo"));
+
+        // 현재 날짜 및 시간 설정
+        String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         NoticeDto notice = NoticeDto.builder()
                 .title(title)
                 .contents(contents)
-                .userDto(UserDto.builder()
-                         .userNo(userNo)
-                         .build())
+                .hit(0) // 기본값 설정
+                .createdAt(createdAt)
                 .build();
 
-        int noticeCount = noticeMapper.insertNotice(notice);
-        return noticeCount;
+        int addResult = noticeMapper.insertNotice(notice);
+        return addResult;
     }
 
 
