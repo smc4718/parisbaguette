@@ -66,9 +66,11 @@ public class NoticeServiceImpl implements NoticeService {
                 .createdAt(createdAt)
                 .build();
 
-        int addResult = noticeMapper.insertNotice(notice);
-        return addResult;
-    }
+        int addResult = noticeMapper.insertNotice(notice); //일반적으로 INSERT 쿼리를 실행하면 영향을 받은 행(row)의 개수가 반환됩니다.
+        return addResult;                                  //정상적으로 1개의 공지가 추가되면 1이 반환되고, 오류가 생겨서 데이터가 추가되지 않으면 0이 반환될 수도 있습니다.
+    }         //noticeMapper.insertNotice(notice);가 반환하는 값을 addResult에 저장하는 이유는 이 값을 나중에 활용하기 위해서입니다. 이를 통해 "공지 추가" 성공 여부를 판단할 수 있습니다.
+              //그래서 행의 개수가 반환되기 때문에, int 타입 변수에 넣어서 return시에 int 타입으로 반환한 것입니다.
+              //이 행의 개수라는 것은, 성공하면 1, 실패하면 0을 반환한다는 뜻이다.
 
     @Override
     public int modifyNotice(HttpServletRequest request) {
