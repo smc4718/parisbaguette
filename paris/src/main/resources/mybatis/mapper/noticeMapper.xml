@@ -55,5 +55,20 @@
          WHERE NOTICE_NO = #{noticeNo}
     </select>
 
+    <!-- 공지 수정하기 -->
+    <update id="updateNotice" parameterType="NoticeDto">
+        UPDATE NOTICE_T
+        SET TITLE = #{title},
+        CONTENTS = #{contents}
+        WHERE NOTICE_NO = #{noticeNo}
+    </update>
+
+    <!-- 공지 삭제하기 -->
+    <delete id="deleteNotice" parameterType="int">
+        DELETE
+        FROM NOTICE_T
+        WHERE NOTICE_NO = #{noticeNo}
+    </delete>
+
 
 </mapper>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>공지 수정</title>
+</head>
+
+<body>
+
+<div class="main_wrap">
+
+    <div class="wrap wrap_2" th:object="${notice}">
+
+        <div>
+
+            <form id="form_notice_modify" method="post" th:action="@{/notice/modifyNotice.do}">
+
+                <h1 style="text-align: center;" th:text="|${notice.noticeNo}번 공지 편집|"></h1>
+
+                <div>
+                    <label for="title">제목</label>
+                    <input type="text" name="title" id="title" class="form-control" th:value="${notice.title}">
+                </div>
+
+                <div>
+                    <label for="contents">내용</label>
+                    <!-- 기존 텍스트 내용은 div로 설정되고, textarea에 넣어주어야 함 -->
+                    <textarea name="contents" id="contents" th:text="${notice.contents}"></textarea>
+                </div>
+
+                <div>
+                    <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+                    <button class="btn btn-primary col-12" type="submit">수정완료</button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <script>
+        const fnNoticeModify = () => {
+            $('#form_notice_modify').submit((event) => {
+                // contents의 텍스트 값을 가져와서 'textarea'에 값 설정
+                const contents = $('#contents').val(); // textarea의 값을 가져오기
+
+                // 폼을 계속 제출하도록 설정 (실제 제출은 자동으로 일어납니다)
+                return true;
+            });
+        }
+
+        fnNoticeModify();
+    </script>
+
+</div>
+
+</body>
+</html>

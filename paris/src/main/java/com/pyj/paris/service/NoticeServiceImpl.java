@@ -70,5 +70,28 @@ public class NoticeServiceImpl implements NoticeService {
         return addResult;
     }
 
+    @Override
+    public int modifyNotice(HttpServletRequest request) {
+        String title = request.getParameter("title");
+        String contents = request.getParameter("contents");
+        int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
+
+        NoticeDto notice = NoticeDto.builder()
+                .title(title)
+                .contents(contents)
+                .noticeNo(noticeNo)
+                .build();
+
+        int modifyResult = noticeMapper.updateNotice(notice);
+
+        return modifyResult;
+    }
+
+    @Override
+    public int removeNotice(HttpServletRequest request) {
+        int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
+        return noticeMapper.deleteNotice(noticeNo);
+    }
+
 
 }
