@@ -21,6 +21,11 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final NoticeMapper noticeMapper;
 
+    @GetMapping("/list2.do")
+    public String list2() {
+        return "notice/list2";
+    }
+
     @GetMapping("/list.do")
     public String list(HttpServletRequest request, Model model) {
         noticeService.loadNoticeList(request, model);
@@ -35,7 +40,7 @@ public class NoticeController {
 
     @GetMapping("/write.form")
     public String write() {
-        return "notice/write";
+        return "notice/write2";
     }
 
     @PostMapping(value = "/addNotice.do")
@@ -45,6 +50,8 @@ public class NoticeController {
           //addResult 없이도 공지를 추가하고 목록으로 이동하는 건 가능함. 하지만 사용자가 공지 등록이 제대로 되었는지 확인할 방법이 없음.
          //그래서 addResult를 활용하면 공지 추가 성공/실패를 사용자에게 보여줄 수 있음. (그걸 위해서 addFlashAttribute가 필요함 : 이것을 통해 리다이렉트 후에도 데이터 유지 가능, 그 데이터를 list.do 같은 곳에서 @ModelAttribute("addResult") Integer addResult로 매개변수에 사용하여 Flash Attribute 값을 가져와 공지 등록 성공/실패 여부를 보여줄 수 있다.)
     }    //그리고 폼제출시 에러가 나도, addFlashAttribute 덕분에 데이터가 한 번 유지되어서, 사용자가 입력했던 값이 없어지지 않고 남아있게 된다. (사용자 편의성 증가)
+        //사실상 redirectAttributes 가 없어도 noticeService.addNotice(request) 만으로도 실행은 되지만, 사용자 편의성이 매우 떨어짐. (사용자 편의성을 위해 사용하는 것)
+        // ★ redirect 가 필요하다는 건, 데이터가 변동된다는 거니까 RedirectAttributes 를 꼭 써주는 게 좋다.
 
     @PostMapping("/edit.form")
     public String edit(@ModelAttribute("notice") NoticeDto notice) {
