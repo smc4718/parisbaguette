@@ -21,11 +21,6 @@ public class NoticeController {
     private final NoticeService noticeService;
     private final NoticeMapper noticeMapper;
 
-    @GetMapping("/list2.do")
-    public String list2() {
-        return "notice/list2";
-    }
-
     @GetMapping("/list.do")
     public String list(HttpServletRequest request, Model model) {
         noticeService.loadNoticeList(request, model);
@@ -40,7 +35,7 @@ public class NoticeController {
 
     @GetMapping("/write.form")
     public String write() {
-        return "notice/write2";
+        return "notice/write";
     }
 
     @PostMapping(value = "/addNotice.do")

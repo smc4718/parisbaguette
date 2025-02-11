@@ -31,9 +31,9 @@
 	<!-- Nav -->
 	<nav id="nav">
 		<ul class="links">
-			<li class="active"><a href="notice/list2.do">오늘의 공지</a></li>
+			<li class="active"><a href="notice/list.do">오늘의 공지</a></li>
 			<li><a href="event/list.do">매장 이벤트</a></li>
-			<li><a href="notice/list2.do">휴일 예약</a></li>
+			<li><a href="notice/list.do">휴일 예약</a></li>
 		</ul>
 		<ul class="icons">
 			<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
@@ -158,39 +158,44 @@
 	<!-- Footer -->
 	<footer id="footer">
 		<section>
+			<!-- 문의사항 게시판 만들지 말고, 여기 작성해서 보내면 문의사항 답변 오는 걸로 하기 -->
+			<h4>문의 사항</h4>
 			<form method="post" action="#">
 				<div class="fields">
 					<div class="field">
-						<label for="name">Name</label>
+						<label for="name">제목</label>
 						<input type="text" name="name" id="name" />
+						<br>
+						<select name="demo-category" id="demo-category">
+							<option value="">- 문의 종류 -</option>
+							<option value="1">근무 관련</option>
+							<option value="1">휴일 관련</option>
+							<option value="1">기타</option>
+						</select>
 					</div>
 					<div class="field">
-						<label for="email">Email</label>
-						<input type="text" name="email" id="email" />
-					</div>
-					<div class="field">
-						<label for="message">Message</label>
+						<label for="message">내용</label>
 						<textarea name="message" id="message" rows="3"></textarea>
 					</div>
 				</div>
 				<ul class="actions">
-					<li><input type="submit" value="Send Message" /></li>
+					<li><input type="submit" value="문의하기" /></li>
 				</ul>
 			</form>
 		</section>
 		<section class="split contact">
 			<section class="alt">
 				<h3>Address</h3>
-				<p>1234 Somewhere Road #87257<br />
-					Nashville, TN 00000-0000</p>
+				<p>서울 파리바게뜨<br />
+					우리집, 1층 101호</p>
 			</section>
 			<section>
 				<h3>Phone</h3>
-				<p><a href="#">(000) 000-0000</a></p>
+				<p><a href="#">010) 333-3333</a></p>
 			</section>
 			<section>
 				<h3>Email</h3>
-				<p><a href="#">info@untitled.tld</a></p>
+				<p><a href="#">smc4718@naver.com</a></p>
 			</section>
 			<section>
 				<h3>Social</h3>
@@ -206,7 +211,10 @@
 
 	<!-- Copyright -->
 	<div id="copyright">
-		<ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+		<ul>
+			<li>&copy; PYJ</li>
+			<li><a th:href="@{/main.do}">Park family</a></li>
+		</ul>
 	</div>
 
 </div>

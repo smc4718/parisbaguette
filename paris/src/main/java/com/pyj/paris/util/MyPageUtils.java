@@ -49,73 +49,51 @@ public class MyPageUtils {
     }
 
     public String getMvcPaging(String url) {
-
         StringBuilder sb = new StringBuilder();
 
-        sb.append("<div class=\"paging\">");
+        sb.append("<div class=\"pagination\">");
 
-        // 이전 블록
-        if(beginPage == 1) {
-            sb.append("<a>이전</a>");
-        } else {
-            sb.append("<a href=\"" + url + "?page=" + (beginPage - 1) + "\">이전</a>");
+        // 이전 페이지 버튼
+        if (page > 1) {
+            sb.append("<a href=\"").append(url).append("?page=").append(page - 1)
+                    .append("\" class=\"previous\">Prev</a>");
         }
 
-        // 페이지 번호
-        for(int p = beginPage; p <= endPage; p++) {
-            if(p == page) {
-                sb.append("<a class=\"now_page\">" + p + "</a>");
-            } else {
-                sb.append("<a href=\"" + url + "?page=" + p + "\">" + p + "</a>");
+        // 첫 번째 페이지
+        if (beginPage > 1) {
+            sb.append("<a href=\"").append(url).append("?page=1\" class=\"page\">1</a>");
+            if (beginPage > 2) {
+                sb.append("<span class=\"extra\">&hellip;</span>");
             }
         }
 
-        // 다음 블록
-        if(endPage == totalPage) {
-            sb.append("<a>다음</a>");
-        } else {
-            sb.append("<a href=\"" + url + "?page=" + (endPage + 1) + "\">다음</a>");
-        }
-
-        sb.append("</div>");
-
-        return sb.toString();
-
-    }
-
-    public String getMvcPaging(String url, String params) {
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("<div class=\"paging\">");
-
-        // 이전 블록
-        if(beginPage == 1) {
-            sb.append("<a>이전</a>");
-        } else {
-            sb.append("<a href=\"" + url + "?page=" + (beginPage - 1) + "&" + params + "\">이전</a>");
-        }
-
-        // 페이지 번호
-        for(int p = beginPage; p <= endPage; p++) {
-            if(p == page) {
-                sb.append("<a class=\"now_page\">" + p + "</a>");
+        // 페이지 번호 (현재 페이지 기준으로 앞뒤 2개씩)
+        for (int p = beginPage; p <= endPage; p++) {
+            if (p == page) {
+                sb.append("<a href=\"#\" class=\"page active\">").append(p).append("</a>");
             } else {
-                sb.append("<a href=\"" + url + "?page=" + p + "&" + params + "\">" + p + "</a>");
+                sb.append("<a href=\"").append(url).append("?page=").append(p)
+                        .append("\" class=\"page\">").append(p).append("</a>");
             }
         }
 
-        // 다음 블록
-        if(endPage == totalPage) {
-            sb.append("<a>다음</a>");
-        } else {
-            sb.append("<a href=\"" + url + "?page=" + (endPage + 1) + "&" + params + "\">다음</a>");
+        // 마지막 페이지
+        if (endPage < totalPage) {
+            if (endPage < totalPage - 1) {
+                sb.append("<span class=\"extra\">&hellip;</span>");
+            }
+            sb.append("<a href=\"").append(url).append("?page=").append(totalPage)
+                    .append("\" class=\"page\">").append(totalPage).append("</a>");
+        }
+
+        // 다음 페이지 버튼
+        if (page < totalPage) {
+            sb.append("<a href=\"").append(url).append("?page=").append(page + 1)
+                    .append("\" class=\"next\">Next</a>");
         }
 
         sb.append("</div>");
-
         return sb.toString();
-
     }
 
     public String getAjaxPaging() {
