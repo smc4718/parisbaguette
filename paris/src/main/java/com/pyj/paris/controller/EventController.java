@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class EventController {
 
-    @GetMapping("/list.do")
+    @GetMapping("/list")
     public String list() {
         return "event/list";
     }

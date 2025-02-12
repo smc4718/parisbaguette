@@ -25,15 +25,15 @@
 
 	<!-- Header -->
 	<header id="header">
-		<a href="/main.do" class="logo">Paris Baguette</a>
+		<a th:href="@{/main}" class="logo">Paris Baguette</a>
 	</header>
 
 	<!-- Nav -->
 	<nav id="nav">
 		<ul class="links">
-			<li class="active"><a href="notice/list.do">오늘의 공지</a></li>
-			<li><a href="event/list.do">매장 이벤트</a></li>
-			<li><a href="notice/list.do">휴일 예약</a></li>
+			<li class="active"><a th:href="@{/notice/list}">오늘의 공지</a></li>
+			<li><a th:href="@{/event/list}">매장 이벤트</a></li>
+			<li><a th:href="@{/notice/list}">휴일 예약</a></li>
 		</ul>
 		<ul class="icons">
 			<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
@@ -213,7 +213,7 @@
 	<div id="copyright">
 		<ul>
 			<li>&copy; PYJ</li>
-			<li><a th:href="@{/main.do}">Park family</a></li>
+			<li><a th:href="@{/main}">Park family</a></li>
 		</ul>
 	</div>
 

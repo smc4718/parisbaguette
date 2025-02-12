@@ -1,31 +1,91 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>공지사항 상세</title>
-    <!-- jQuery 추가 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>파리바게뜨 망우겸재 커뮤니티</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 </head>
-<body>
-<h1>공지사항 상세</h1>
-<p><strong>제목:</strong> <span th:text="${notice.title}"></span></p>
-<p><strong>작성일:</strong> <span th:text="${notice.createdAt}"></span></p>
-<p><strong>내용:</strong></p>
-<p th:text="${notice.contents}"></p>
+<body class="is-preload">
 
-<div>
-    <form id="frm_btn" method="post">
-        <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
-        <input type="hidden" name="title"    th:value="${notice.title}">
-        <input type="hidden" name="contents" th:value="${notice.contents}">
-    </form>
+<!-- Wrapper -->
+<div id="wrapper" class="fade-in">
+
+    <!-- Intro -->
+    <div id="intro">
+        <h1>파리바게뜨 망우겸재</h1>
+        <p>망우겸재와 함께하는 행복한 하루 되세요~
+            <a href="https://map.naver.com/p/entry/place/19501449?lng=127.0976717&lat=37.5906108&placePath=%2Fhome&entry=plt&searchType=place&c=15.00,0,0,0,dh"><br>망우겸재점에 대해...</a>
+        </p>
+        <ul class="actions">
+            <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+        </ul>
+    </div>
+
+    <!-- Header -->
+    <header id="header">
+        <a th:href="@{/main}" class="logo">Paris Baguette</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li class="active"><a th:href="@{/notice/list}">오늘의 공지</a></li>
+            <li><a th:href="@{/event/list}">매장 이벤트</a></li>
+            <li><a th:href="@{/notice/list}">휴일 예약</a></li>
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+
+        <h2>근무자 필독!</h2>
+        <p>
+            <strong>공지번호:</strong> <span th:text="${notice.noticeNo}"></span><br>
+            <strong>작성일:</strong> <span th:text="${notice.createdAt}"></span><br>
+        </p>
+        <p><strong>제목:</strong> <span th:text="${notice.title}"></span></p>
+        <p><strong>내용:</strong> <span th:text="${notice.contents}"></span></p>
+
+        <div>
+            <form id="frm_btn" method="post">
+                <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+                <input type="hidden" name="title"    th:value="${notice.title}">
+                <input type="hidden" name="contents" th:value="${notice.contents}">
+            </form>
+
+            <button type="button" id="btn_edit">편집</button>
+            <button type="button" id="btn_rmv">삭제</button>
+            <button type="button" id="btn_list">목록</button>
+        </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div id="copyright">
+        <ul>
+            <li>&copy; PYJ</li>
+            <li><a th:href="@{/main}">Park family</a></li>
+        </ul>
+    </div>
+
 </div>
 
-<div>
-    <button type="button" id="btn_edit">편집</button>
-    <button type="button" id="btn_rmv">삭제</button>
-    <button type="button" id="btn_list">목록</button>
-</div>
+<!-- Scripts -->
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrollex.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrolly.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
 
 <script th:inline="javascript">
     $(document).ready(function() {  // DOM이 로드된 후 실행
@@ -48,7 +108,7 @@
 
         // 목록 버튼 클릭
         $('#btn_list').click(function() {
-            window.location.href = '/notice/list.do';
+            window.location.href = '/notice/list';
         });
     });
 </script>

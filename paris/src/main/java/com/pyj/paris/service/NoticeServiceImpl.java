@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,31 +22,29 @@ public class NoticeServiceImpl implements NoticeService {
     private final MyPageUtils myPageUtils;
 
     @Override
-    public void loadNoticeList(HttpServletRequest request, Model model) {
+    public Map<String, Object> getNoticeList(HttpServletRequest request) {
 
         Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
         int page = Integer.parseInt(opt.orElse("1"));
         int total = noticeMapper.getNoticeCount();
-        int display = 5;
+        int display = 7;
 
         myPageUtils.setPaging(page, total, display);
 
         Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                , "end", myPageUtils.getEnd());
+                                         , "end", myPageUtils.getEnd());
 
         List<NoticeDto> noticeList = noticeMapper.getNoticeList(map);
 
-        model.addAttribute("noticeList", noticeList);
-        model.addAttribute("paging", myPageUtils.getMvcPaging(request.getContextPath() + "/notice/list.do"));
-        model.addAttribute("beginNo", total - (page - 1) * display);
+        return Map.of("noticeList", noticeList
+                    , "totalPage", myPageUtils.getTotalPage());
     }
 
     @Override
-    public NoticeDto getNotice(int noticeNo, Model model) {
+    public void getNotice(int noticeNo, Model model) {
         NoticeDto notice = noticeMapper.getNotice(noticeNo);
 
         model.addAttribute("notice", notice);
-        return notice;
     }
 
     @Override
@@ -57,7 +53,7 @@ public class NoticeServiceImpl implements NoticeService {
         String contents = request.getParameter("contents");
 
         // 현재 날짜 및 시간 설정
-        String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         NoticeDto notice = NoticeDto.builder()
                 .title(title)
@@ -95,5 +91,9 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeMapper.deleteNotice(noticeNo);
     }
 
+    @Override
+    public int increaseHit(int noticeNo) {
+        return noticeMapper.updateHit(noticeNo);
+    }
 
 }

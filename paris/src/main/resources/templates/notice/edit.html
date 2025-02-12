@@ -1,60 +1,116 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <meta charset="UTF-8">
-    <title>공지 수정</title>
+	<title>파리바게뜨 망우겸재 커뮤니티</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+	<noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 </head>
+<body class="is-preload">
 
-<body>
+<!-- Wrapper -->
+<div id="wrapper" class="fade-in">
 
-<div class="main_wrap">
+	<!-- Intro -->
+	<div id="intro">
+		<h1>파리바게뜨 망우겸재</h1>
+		<p>망우겸재와 함께하는 행복한 하루 되세요~
+			<a href="https://map.naver.com/p/entry/place/19501449?lng=127.0976717&lat=37.5906108&placePath=%2Fhome&entry=plt&searchType=place&c=15.00,0,0,0,dh"><br>망우겸재점에 대해...</a>
+		</p>
+		<ul class="actions">
+			<li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+		</ul>
+	</div>
 
-    <div class="wrap wrap_2" th:object="${notice}">
+	<!-- Header -->
+	<header id="header">
+		<a th:href="@{/main}" class="logo">Paris Baguette</a>
+	</header>
 
-        <div>
+	<!-- Nav -->
+	<nav id="nav">
+		<ul class="links">
+			<li class="active"><a th:href="@{/notice/list}">오늘의 공지</a></li>
+			<li><a th:href="@{/event/list}">매장 이벤트</a></li>
+			<li><a th:href="@{/notice/list}">휴일 예약</a></li>
+		</ul>
+		<ul class="icons">
+			<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+			<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+			<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+			<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+		</ul>
+	</nav>
 
-            <form id="form_notice_modify" method="post" th:action="@{/notice/modifyNotice.do}">
+	<!-- Main -->
+	<div id="main">
 
-                <h1 style="text-align: center;" th:text="|${notice.noticeNo}번 공지 편집|"></h1>
+		<!-- Form -->
+		<div class="wrap wrap_2" th:object="${notice}">
 
-                <div>
-                    <label for="title">제목</label>
-                    <input type="text" name="title" id="title" class="form-control" th:value="${notice.title}">
-                </div>
+			<div>
 
-                <div>
-                    <label for="contents">내용</label>
-                    <!-- 기존 텍스트 내용은 div로 설정되고, textarea에 넣어주어야 함 -->
-                    <textarea name="contents" id="contents" th:text="${notice.contents}"></textarea>
-                </div>
+				<form id="form_notice_modify" method="post" th:action="@{/notice/modifyNotice.do}">
 
-                <div>
-                    <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
-                    <button class="btn btn-primary col-12" type="submit">수정완료</button>
-                </div>
+					<h3 style="text-align: center;" th:text="|${notice.noticeNo}번 공지 편집|"></h3>
 
-            </form>
+					<div>
+						<label for="title">제목</label>
+						<input type="text" name="title" id="title" class="form-control" th:value="${notice.title}">
+					</div>
 
-        </div>
+					<div>
+						<label for="contents">내용</label>
+						<!-- 기존 텍스트 내용은 div로 설정되고, textarea에 넣어주어야 함 -->
+						<textarea name="contents" id="contents" th:text="${notice.contents}"></textarea>
+					</div>
 
-    </div>
+					<div>
+						<input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+						<button class="btn btn-primary col-12" type="submit">수정완료</button>
+					</div>
 
-    <script>
-        const fnNoticeModify = () => {
-            $('#form_notice_modify').submit((event) => {
-                // contents의 텍스트 값을 가져와서 'textarea'에 값 설정
-                const contents = $('#contents').val(); // textarea의 값을 가져오기
+				</form>
 
-                // 폼을 계속 제출하도록 설정 (실제 제출은 자동으로 일어납니다)
-                return true;
-            });
-        }
+			</div>
 
-        fnNoticeModify();
-    </script>
+		</div>
+
+	</div>
+
+	<!-- Copyright -->
+	<div id="copyright">
+		<ul>
+			<li>&copy; PYJ</li>
+			<li><a th:href="@{/main}">Park family</a></li>
+		</ul>
+	</div>
 
 </div>
+
+<!-- Scripts -->
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrollex.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrolly.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
+<script>
+	const fnNoticeModify = () => {
+		$('#form_notice_modify').submit((event) => {
+			// contents의 텍스트 값을 가져와서 'textarea'에 값 설정
+			const contents = $('#contents').val(); // textarea의 값을 가져오기
+
+			// 폼을 계속 제출하도록 설정 (실제 제출은 자동으로 일어납니다)
+			return true;
+		});
+	}
+
+	fnNoticeModify();
+</script>
 
 </body>
 </html>
