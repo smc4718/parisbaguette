@@ -125,6 +125,29 @@
 			loadNoticeList(page);
 		});
 
+		$(document).ready(function() {
+			// 공지 클릭 시 조회수 증가
+			$(document).on('click', '.notice-link', function(e) {
+				e.preventDefault();
+				var noticeNo = $(this).data('notice-no');
+
+				$.ajax({
+					url: '/notice/increaseHit.do',
+					type: 'POST',
+					data: { noticeNo: noticeNo },
+					success: function(response) {
+						if (response > 0) {
+							// 조회수 증가 후 공지 상세 페이지로 이동
+							window.location.href = '/notice/detail.do?noticeNo=' + noticeNo;
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error("조회수 증가 실패: " + error);
+					}
+				});
+			});
+		});
+
 		function loadNoticeList(page) {
 			$.ajax({
 				url: '/notice/getList.do',
@@ -136,7 +159,7 @@
 					$.each(data.noticeList, function (index, notice) {
 						str += '<tr>';
 						str += '<td>' + notice.noticeNo + '</td>';
-						str += '<td><a href="/notice/detail.do?noticeNo=' + notice.noticeNo + '">' + notice.title + '</a></td>';
+						str += '<td><a href="#" class="notice-link" data-notice-no="' + notice.noticeNo + '">' + notice.title + '</a></td>';
 						str += '<td>' + notice.hit + '</td>';
 						str += '<td>' + notice.createdAt + '</td>';
 						str += '</tr>';

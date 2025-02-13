@@ -71,13 +71,10 @@ public class NoticeController {
         return "redirect:/notice/list";
     }
 
-    @GetMapping("/increaseHit.do")
-    public String increaseHit(@RequestParam(value = "noticeNo", required = false, defaultValue = "0") int noticeNo) {
+    @PostMapping("/increaseHit.do")
+    @ResponseBody
+    public int increaseHit(@RequestParam("noticeNo") int noticeNo) {
         int increaseHit = noticeService.increaseHit(noticeNo);
-        if(increaseHit == 1) {
-            return "redirect:/notice/detail.do?noticeNo=" + noticeNo;
-        } else {
-            return "redirect:/notice/list";
-        }
+        return increaseHit;
     }
 }
