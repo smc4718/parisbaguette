@@ -11,11 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserDto {
     private int userNo;
-    private String email;
+    private String id;
     private String pw;
     private String name;
     private String gender;
-    private String mobile;
+    private String email;
+    private String hp;
+    private String hpSmsYn;
     private String joinedAt;
 
 }

@@ -2,7 +2,7 @@ package com.pyj.paris.service;
 
 import com.pyj.paris.dao.NoticeMapper;
 import com.pyj.paris.dto.NoticeDto;
-import com.pyj.paris.util.MyPageUtils;
+import com.pyj.paris.util.PbPageUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeMapper noticeMapper;
-    private final MyPageUtils myPageUtils;
+    private final PbPageUtils pbPageUtils;
 
     @Override
     public Map<String, Object> getNoticeList(HttpServletRequest request) {
@@ -29,15 +29,15 @@ public class NoticeServiceImpl implements NoticeService {
         int total = noticeMapper.getNoticeCount();
         int display = 7;
 
-        myPageUtils.setPaging(page, total, display);
+        pbPageUtils.setPaging(page, total, display);
 
-        Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                                         , "end", myPageUtils.getEnd());
+        Map<String, Object> map = Map.of("begin", pbPageUtils.getBegin()
+                                         , "end", pbPageUtils.getEnd());
 
         List<NoticeDto> noticeList = noticeMapper.getNoticeList(map);
 
         return Map.of("noticeList", noticeList
-                    , "totalPage", myPageUtils.getTotalPage());
+                    , "totalPage", pbPageUtils.getTotalPage());
     }
 
     @Override

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Component
-public class MyPageUtils {
+public class PbPageUtils {
 
     private int page;     // 현재 페이지 번호(요청 파라미터로 받는다.)
     private int total;    // 전체 항목의 개수(DB에서 구한 뒤 받는다.)

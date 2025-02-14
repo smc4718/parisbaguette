@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pyj.paris.dao.UserMapper">
+
+    <resultMap id="UserMap" type="UserDto">
+        <id     column="USER_NO"     property="userNo" />
+        <result column="ID"          property="id" />
+        <result column="PW"          property="pw" />
+        <result column="NAME"        property="name" />
+        <result column="GENDER"      property="gender" />
+        <result column="EMAIL"       property="email" />
+        <result column="HP"          property="hp" />
+        <result column="HP_SMS_YN"   property="hpSmsYn" />
+        <result column="JOINED_AT"   property="joinedAt" />
+    </resultMap>
+
+    <select id="getUser" parameterType="Map" resultType="UserDto">
+        SELECT USER_NO, ID, PW, NAME, GENDER, EMAIL, HP, HP_SMS_YN, JOINED_AT
+          FROM USER_T;
+        <where>
+            <if test="id != null">ID = #{id}</if>
+            <if test="pw != null">PW = #{pw}</if>
+            <if test="userNo != null">USER_NO = #{userNo}</if>
+        </where>
+    </select>
+
+
+</mapper>

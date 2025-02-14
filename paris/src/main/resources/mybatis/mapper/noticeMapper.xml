@@ -5,7 +5,7 @@
 
 <mapper namespace="com.pyj.paris.dao.NoticeMapper">
 
-    <resultMap type="NoticeDto" id="NoticeMap">
+    <resultMap id="NoticeMap" type="NoticeDto">
         <id     column="NOTICE_NO"  property="noticeNo" />
         <result column="TITLE"      property="title" />
         <result column="CONTENTS"   property="contents" />
