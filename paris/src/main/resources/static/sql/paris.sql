@@ -57,4 +57,4 @@ REFERENCES NOTICE_T (NOTICE_NO) ON DELETE CASCADE;
 -- 반드시 모든 sql쿼리 하나라도 수정하면, 전체 쿼리 F5로 재실행 해야함.
 -- 이전에 실행했던 쿼리에 수정 전 쿼리가 있으면, 실제 웹에서 동작시 에러남.
 
-INSERT INTO USER_T VALUES(USER_SEQ.NEXTVAL, 'pyj4718', STANDARD_HASH('1735', 'SHA256'), 'pb마스터', 'M', 'pb@naver.com', 01013134545, 'Y', TO_DATE('250207', 'YYMMDD'));
+INSERT INTO USER_T VALUES(1, 'pyj0714', STANDARD_HASH('1735', 'SHA256'), 'PB마스터', 'M', 'pb@naver.com', 01013134545, 'Y', TO_DATE('250207', 'YYMMDD'));

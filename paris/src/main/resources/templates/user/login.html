@@ -6,6 +6,28 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" th:href="@{/assets/css/main.css}" />
 	<noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" th:href="@{/images/favicon.ico}"/>
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/fonts/iconic/css/material-design-iconic-font.min.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/animate/animate.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/css-hamburgers/hamburgers.min.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/animsition/css/animsition.min.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/select2/select2.min.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/vendor/daterangepicker/daterangepicker.css}">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/util2.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/main2.css}">
+	<!--===============================================================================================-->
 </head>
 <body class="is-preload">
 
@@ -28,43 +50,49 @@
 		<a th:href="@{/main}" class="logo">Paris Baguette</a>
 	</header>
 
-	<!-- Nav -->
-	<nav id="nav">
-		<ul class="links">
-			<li class="active"><a th:href="@{/notice/list}">오늘의 공지</a></li>
-			<li><a th:href="@{/event/list}">매장 이벤트</a></li>
-			<li><a th:href="@{/notice/list}">휴일 예약</a></li>
-		</ul>
-		<ul class="icons">
-			<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-			<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-			<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-			<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-		</ul>
-	</nav>
-
 	<!-- Main -->
 	<div id="main">
 
-		<!-- Form -->
-		<form th:action="@{/user/login}" method="post">
-			<div class="row gtr-uniform">
-				<div class="col-6 col-12-xsmall">
-					<h3>PB망우겸재 로그인</h3>
-					<input type="text" name="id" id="demo-name" placeholder="아이디" required />
-				</div>
-				<div class="col-12">
-					<input type="password" name="pw" id="demo-message" placeholder="비밀번호" required>
-				</div>
-				<div class="col-12">
-					<ul class="actions">
-						<li><button type="submit" class="primary">로그인</button></li>
-					</ul>
-				</div>
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<!-- Form -->
+				<form class="login100-form validate-form" th:action="@{/user/login}" method="post">
+					<span class="login100-form-title p-b-26">
+						PB 망우겸재
+					</span>
+					<span class="login100-form-title p-b-48">
+						<i class="zmdi zmdi-font"></i>
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate = "아이디 필수 입력">
+						<input class="input100" type="text" name="id">
+						<span class="focus-input100" data-placeholder="아이디"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="비밀번호 필수 입력">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+						<input class="input100" type="password" name="pw">
+						<span class="focus-input100" data-placeholder="비밀번호"></span>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<input type="hidden" name="referer" value="${referer}">
+							<button class="login100-form-btn" type="submit">
+								로그인
+							</button>
+						</div>
+					</div>
+				</form>
 			</div>
-		</form>
+		</div>
 
 	</div>
+
+	<div id="dropDownSelect1"></div>
 
 	<!-- Copyright -->
 	<div id="copyright">
@@ -84,6 +112,15 @@
 <script th:src="@{/assets/js/breakpoints.min.js}"></script>
 <script th:src="@{/assets/js/util.js}"></script>
 <script th:src="@{/assets/js/main.js}"></script>
+
+<script th:src="@{/assets/vendor/animsition/js/animsition.min.js}"></script>
+<script th:src="@{/assets/vendor/bootstrap/js/popper.js}"></script>
+<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/vendor/select2/select2.min.js}"></script>
+<script th:src="@{/assets/vendor/daterangepicker/moment.min.js}"></script>
+<script th:src="@{/assets/vendor/daterangepicker/daterangepicker.js}"></script>
+<script th:src="@{/assets/vendor/countdowntime/countdowntime.js}"></script>
+<script th:src="@{/assets/js/main2.js}"></script>
 
 </body>
 </html>

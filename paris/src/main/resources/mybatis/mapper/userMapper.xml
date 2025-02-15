@@ -19,11 +19,11 @@
 
     <select id="getUser" parameterType="Map" resultType="UserDto">
         SELECT USER_NO, ID, PW, NAME, GENDER, EMAIL, HP, HP_SMS_YN, JOINED_AT
-          FROM USER_T;
+          FROM USER_T
         <where>
             <if test="id != null">ID = #{id}</if>
-            <if test="pw != null">PW = #{pw}</if>
-            <if test="userNo != null">USER_NO = #{userNo}</if>
+            <if test="pw != null">AND PW = #{pw}</if>
+            <if test="userNo != null">AND USER_NO = #{userNo}</if>
         </where>
     </select>
 

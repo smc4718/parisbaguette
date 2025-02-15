@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/login.form")
     public String loginForm(HttpServletRequest request, Model model) throws Exception {
@@ -35,7 +35,7 @@ public class UserController {
         return "redirect:/main";
     }
 
-    @GetMapping
+    @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
         userService.logout(request, response);
         return null;

@@ -5,7 +5,6 @@ import com.pyj.paris.dto.UserDto;
 import com.pyj.paris.util.PbSecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,8 +17,8 @@ import java.util.Map;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserMapper userMapper;
-    private PbSecurityUtils pbSecurityUtils;
+    private final UserMapper userMapper;
+    private final PbSecurityUtils pbSecurityUtils;
 
     @Override
     public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -28,13 +27,11 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> map = Map.of("id", id, "pw", pw);
 
-        HttpSession session = request.getSession();
-
         UserDto user = userMapper.getUser(map);
 
         if (user != null) {
             request.getSession().setAttribute("user", user);
-            response.sendRedirect(request.getParameter("referer"));
+//            response.sendRedirect(request.getParameter("referer"));  => 현재 로그인만 하고 있어서 사용안하는 중(나중에 회원가입, 아이디찾기, 비번찾기 등에 사용)
         } else {
             response.setContentType("text/html; charset=utf-8");
             PrintWriter out = response.getWriter();
@@ -51,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public void logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request.getSession().invalidate();
 
-        response.sendRedirect(request.getContextPath() + "/main");
+        response.sendRedirect(request.getContextPath() + "/user/login.form");
     }
 
     @Override
