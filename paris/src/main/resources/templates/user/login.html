@@ -47,26 +47,18 @@
 	<div id="main">
 
 		<!-- Form -->
-		<form th:action="@{/notice/addNotice.do}" method="post">
+		<form th:action="@{/user/login}" method="post">
 			<div class="row gtr-uniform">
 				<div class="col-6 col-12-xsmall">
-					<h3>공지사항 작성</h3>
-					<input type="text" name="title" id="demo-name" placeholder="제목" required />
+					<h3>PB망우겸재 로그인</h3>
+					<input type="text" name="id" id="demo-name" placeholder="아이디" required />
 				</div>
-				<!-- Break -->
 				<div class="col-12">
-					<textarea name="contents" id="demo-message" placeholder="내용" rows="6" required></textarea>
+					<input type="password" name="pw" id="demo-message" placeholder="비밀번호" required>
 				</div>
-				<!-- Break -->
 				<div class="col-12">
 					<ul class="actions">
-						<li><input type="submit" value="작성 완료" class="primary" /></li>
-						<li><input type="reset" value="초기화" /></li>
-						<li>
-							<button type="button" class="ui-helper-reset">
-								<a th:href="@{/notice/list}" style="border: none">목록</a>
-							</button>
-						</li>
+						<li><button type="submit" class="primary">로그인</button></li>
 					</ul>
 				</div>
 			</div>

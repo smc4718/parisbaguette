@@ -29,7 +29,7 @@ public class UserController {
         return "user/login";
     }
 
-    @PostMapping("/login.do")
+    @PostMapping("/login")
     public String login(HttpServletRequest request, HttpServletResponse response) throws Exception {
         userService.login(request, response);
         return "redirect:/main";
