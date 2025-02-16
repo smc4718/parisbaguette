@@ -11,6 +11,17 @@
         <result column="CONTENTS"   property="contents" />
         <result column="HIT"        property="hit" />
         <result column="CREATED_AT" property="createdAt" />
+        <association javaType="UserDto"     property="userDto">
+            <id         column="USER_NO"         property="userNo" />
+            <result     column="ID"              property="id" />
+            <result     column="PW"              property="pw" />
+            <result     column="NAME"            property="name" />
+            <result     column="GENDER"          property="gender" />
+            <result     column="EMAIL"           property="email" />
+            <result     column="HP"              property="hp" />
+            <result     column="HP_SMS_YN"       property="hpSmsYn" />
+            <result     column="JOINED_AT"       property="joinedAt" />
+        </association>
     </resultMap>
 
     <!-- 공지 갯수 -->
@@ -20,11 +31,23 @@
     </select>
 
     <!-- 공지 리스트 -->
-    <select id="getNoticeList" parameterType="Map" resultType="NoticeDto">
-        SELECT NOTICE_NO, TITLE, CONTENTS, HIT, CREATED_AT
-          FROM (SELECT ROW_NUMBER() OVER(ORDER BY NOTICE_NO DESC) AS RN, NOTICE_NO, TITLE, CONTENTS, HIT, CREATED_AT
-                  FROM NOTICE_T) NU
-         WHERE RN BETWEEN #{begin} AND #{end}
+    <select id="getNoticeList" parameterType="Map" resultMap="NoticeMap">
+        SELECT N.NOTICE_NO, N.USER_NO, N.TITLE, N.CONTENTS, N.HIT, N.CREATED_AT,
+               U.ID, U.PW, U.NAME, U.GENDER, U.EMAIL, U.HP, U.HP_SMS_YN, U.JOINED_AT
+          FROM NOTICE_T N
+               LEFT JOIN USER_T U
+               ON N.USER_NO = U.USER_NO
+         WHERE N.NOTICE_NO BETWEEN #{begin} AND #{end}
+         ORDER BY N.NOTICE_NO DESC
+    </select>
+
+    <!-- 공지 상세 -->
+    <select id="getNotice" parameterType="int" resultMap="NoticeMap">
+        SELECT N.NOTICE_NO, N.USER_NO, N.TITLE, N.CONTENTS, N.HIT, N.CREATED_AT,
+               U.USER_NO, U.ID, U.PW, U.NAME, U.GENDER, U.EMAIL, U.HP, U.HP_SMS_YN, U.JOINED_AT
+          FROM NOTICE_T N JOIN USER_T U
+               ON N.USER_NO = U.USER_NO
+         WHERE N.NOTICE_NO = #{noticeNo}
     </select>
 
     <!-- 공지 등록 -->
@@ -35,25 +58,20 @@
         </selectKey>
         INSERT INTO NOTICE_T(
             NOTICE_NO
+          , USER_NO
           , TITLE
           , CONTENTS
           , HIT
           , CREATED_AT
         ) VALUES (
             #{noticeNo}
+          , #{userDto.userNo}
           , #{title}
           , #{contents}
           , NVL(#{hit}, 0) <!-- 기본값 0 -->
           , TO_CHAR(SYSDATE, 'YYYY-MM-DD') <!-- 현재 시간 설정 -->
         )
     </insert>
-
-    <!-- 공지 상세 -->
-    <select id="getNotice" parameterType="int" resultMap="NoticeMap">
-        SELECT NOTICE_NO, TITLE, CONTENTS, HIT, CREATED_AT
-          FROM NOTICE_T
-         WHERE NOTICE_NO = #{noticeNo}
-    </select>
 
     <!-- 공지 수정하기 -->
     <update id="updateNotice" parameterType="NoticeDto">

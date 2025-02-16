@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
 
         if (user != null) {
             request.getSession().setAttribute("user", user);
-//            response.sendRedirect(request.getParameter("referer"));  => 현재 로그인만 하고 있어서 사용안하는 중(나중에 회원가입, 아이디찾기, 비번찾기 등에 사용)
         } else {
             response.setContentType("text/html; charset=utf-8");
             PrintWriter out = response.getWriter();

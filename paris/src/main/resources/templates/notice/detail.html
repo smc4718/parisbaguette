@@ -50,21 +50,24 @@
         <p>
             <strong>공지번호:</strong> <span th:text="${notice.noticeNo}"></span><br>
             <strong>작성일:</strong> <span th:text="${notice.createdAt}"></span><br>
+            <strong>작성자:</strong> <span th:text="${notice.userDto.name}"></span><br>
             <strong>조회수:</strong> <span th:text="${notice.hit}"></span><br>
         </p>
         <p><strong>제목:</strong> <span th:text="${notice.title}"></span></p>
         <p><strong>내용:</strong> <span th:text="${notice.contents}"></span></p>
 
         <div>
-            <form id="frm_btn" method="post">
-                <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
-                <input type="hidden" name="title"    th:value="${notice.title}">
-                <input type="hidden" name="contents" th:value="${notice.contents}">
-            </form>
+            <th:block th:if="${session.user.userNo == 1 or session.user.userNo == notice.userDto.userNo}">
+                <form id="frm_btn" method="post">
+                    <input type="hidden" name="noticeNo" th:value="${notice.noticeNo}">
+                    <input type="hidden" name="title"    th:value="${notice.title}">
+                    <input type="hidden" name="contents" th:value="${notice.contents}">
+                </form>
 
-            <button type="button" id="btn_edit">편집</button>
-            <button type="button" id="btn_rmv">삭제</button>
-            <button type="button" id="btn_list">목록</button>
+                <button type="button" id="btn_edit">편집</button>
+                <button type="button" id="btn_rmv">삭제</button>
+                <button type="button" id="btn_list">목록</button>
+            </th:block>
         </div>
 
     </div>

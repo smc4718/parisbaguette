@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NoticeDto {
     private int noticeNo;
+    private UserDto userDto;
     private String title;
     private String contents;
     private int hit;

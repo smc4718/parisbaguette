@@ -65,6 +65,7 @@
 					<th>번호</th>
 					<th>제목</th>
 					<th>조회수</th>
+					<th>작성자</th>
 					<th>작성일</th>
 				</tr>
 			</thead>
@@ -159,6 +160,7 @@
 						str += '<td>' + notice.noticeNo + '</td>';
 						str += '<td><a href="#" class="notice-link" data-notice-no="' + notice.noticeNo + '">' + notice.title + '</a></td>';
 						str += '<td>' + notice.hit + '</td>';
+						str += '<td>' + notice.userDto.name + '</td>';
 						str += '<td>' + notice.createdAt + '</td>';
 						str += '</tr>';
 					});
