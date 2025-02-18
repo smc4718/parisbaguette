@@ -10,10 +10,27 @@ spring:
       thymeleaf:
         cache: false  #어플 재실행 없이 실시간 타임리프 반영이기에, 배포시에는 설정 지우거나, 반드시 true 로 바꿔줘야함
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+
 # mybatis
 mybatis:
   config-location: mybatis/config/mybatis-config.xml
   mapper-locations: mybatis/mapper/*.xml
+
+# character encoding, session, port
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+    session:
+      timeout: 1800
+      tracking-modes: cookie
 
 # jasypt
   #jasypt:

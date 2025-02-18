@@ -1,6 +1,5 @@
 package com.pyj.paris.controller;
 
-import com.pyj.paris.dao.NoticeMapper;
 import com.pyj.paris.dto.NoticeDto;
 import com.pyj.paris.service.NoticeService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,6 @@ import java.util.Map;
 public class NoticeController {
 
     private final NoticeService noticeService;
-    private final NoticeMapper noticeMapper;
 
     @GetMapping("/list")
     public String list() {

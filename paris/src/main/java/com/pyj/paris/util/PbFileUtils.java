@@ -12,7 +12,20 @@ public class PbFileUtils {
     // 공지 작성시 사용된 이미지가 저장될 경로 반환
     public String getNoticeImagePath() {
         LocalDate today = LocalDate.now();
-        return "/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+        String baseDir = System.getProperty("os.name").toLowerCase().contains("win") ? "D:/paris/notice/" : "/paris/notice/";
+        return baseDir + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    }
+
+
+    // 공지 게시판 작성시 첨부한 파일이 저장될 경로 반환
+    public String getUploadPath() {
+        LocalDate today = LocalDate.now();
+        return "/paris/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    }
+
+    // 임시 파일이 저장될 경로 반환하기 (zip 파일)
+    public String getTempPath() {
+        return "/paris/temp/";
     }
 
     // 파일이 저장될 이름 반환하기
@@ -30,5 +43,10 @@ public class PbFileUtils {
 
         return UUID.randomUUID().toString().replace("-", "") + "." + extName;
 
+    }
+
+    // 임시 파일 이름 반환하기 (확장자는 제외하고 이름만 반환)
+    public String getTempFilename() {
+        return System.currentTimeMillis() + "";
     }
 }

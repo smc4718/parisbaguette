@@ -97,14 +97,14 @@
 
     <!-- 이미지 삽입 -->
     <insert id="insertNoticeImage" parameterType="NoticeImageDto">
-        INSERT INTO BLOG_IMAGE_T(
+        INSERT INTO NOTICE_IMAGE_T(
           NOTICE_NO
         , IMAGE_PATH
         , FILESYSTEM_NAME
         ) VALUES(
           #{noticeNo}
-          #{imagePath}
-          #{filesystemName}
+        , #{imagePath}
+        , #{filesystemName}
         )
     </insert>
 
