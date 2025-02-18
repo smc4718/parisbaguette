@@ -95,5 +95,39 @@
          WHERE NOTICE_NO = #{noticeNo}
     </update>
 
+    <!-- 이미지 삽입 -->
+    <insert id="insertNoticeImage" parameterType="NoticeImageDto">
+        INSERT INTO BLOG_IMAGE_T(
+          NOTICE_NO
+        , IMAGE_PATH
+        , FILESYSTEM_NAME
+        ) VALUES(
+          #{noticeNo}
+          #{imagePath}
+          #{filesystemName}
+        )
+    </insert>
+
+    <!-- 이미지 리스트 -->
+    <select id="getNoticeImageList" parameterType="int" resultType="NoticeImageDto">
+        SELECT NOTICE_NO, IMAGE_PATH, FILESYSTEM_NAME
+          FROM NOTICE_IMAGE_T
+         WHERE NOTICE_NO = #{noticeNo}
+    </select>
+
+    <!-- 이미지 삭제 -->
+    <delete id="deleteNoticeImage" parameterType="String">
+        DELETE
+          FROM NOTICE_IMAGE_T
+         WHERE FILESYSTEM_NAME = #{filesystemName}
+    </delete>
+
+    <!-- 이미지리스트 삭제 -->
+    <delete id="deleteNoticeImageList" parameterType="int">
+        DELETE
+          FROM NOTICE_IMAGE_T
+         WHERE NOTICE_NO = #{noticeNo}
+    </delete>
+
 
 </mapper>

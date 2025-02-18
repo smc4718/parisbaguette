@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
@@ -25,8 +26,8 @@ public class NoticeController {
         return "notice/list";
     }
 
-    @GetMapping(value = "/getList.do", produces = "application/json")
     @ResponseBody
+    @GetMapping(value = "/getList.do", produces = "application/json")
     public Map<String, Object> getList(HttpServletRequest request) {
         return noticeService.getNoticeList(request);
     }
@@ -71,10 +72,16 @@ public class NoticeController {
         return "redirect:/notice/list";
     }
 
-    @PostMapping("/increaseHit.do")
     @ResponseBody
+    @PostMapping("/increaseHit.do")
     public int increaseHit(@RequestParam("noticeNo") int noticeNo) {
         int increaseHit = noticeService.increaseHit(noticeNo);
         return increaseHit;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/imageUpload.do", produces = "application/json")
+    public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
+        return noticeService.imageUpload(multipartRequest);
     }
 }

@@ -2,18 +2,29 @@ package com.pyj.paris.service;
 
 import com.pyj.paris.dao.NoticeMapper;
 import com.pyj.paris.dto.NoticeDto;
+import com.pyj.paris.dto.NoticeImageDto;
 import com.pyj.paris.dto.UserDto;
+import com.pyj.paris.util.PbFileUtils;
 import com.pyj.paris.util.PbPageUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +32,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeMapper noticeMapper;
     private final PbPageUtils pbPageUtils;
+    private final PbFileUtils pbFileUtils;
 
     @Override
     public Map<String, Object> getNoticeList(HttpServletRequest request) {
@@ -67,17 +79,60 @@ public class NoticeServiceImpl implements NoticeService {
                 .createdAt(createdAt)
                 .build();
 
-        int addResult = noticeMapper.insertNotice(notice); //일반적으로 INSERT 쿼리를 실행하면 영향을 받은 행(row)의 개수가 반환됩니다.
-        return addResult;                                  //정상적으로 1개의 공지가 추가되면 1이 반환되고, 오류가 생겨서 데이터가 추가되지 않으면 0이 반환될 수도 있습니다.
-    }         //noticeMapper.insertNotice(notice);가 반환하는 값을 addResult에 저장하는 이유는 이 값을 나중에 활용하기 위해서입니다. 이를 통해 "공지 추가" 성공 여부를 판단할 수 있습니다.
-              //그래서 행의 개수가 반환되기 때문에, int 타입 변수에 넣어서 return시에 int 타입으로 반환한 것입니다.
-              //이 행의 개수라는 것은, 성공하면 1, 실패하면 0을 반환한다는 뜻이다.
+        int addResult = noticeMapper.insertNotice(notice);
+
+        // Editor에 추가한 이미지 목록 가져와서 NOTICE_IMAGE_T에 저장하기
+        for(String editorImage : getEditorImageList(contents)) {
+            NoticeImageDto noticeImage = NoticeImageDto.builder()
+                                        .noticeNo(notice.getNoticeNo())
+                                        .imagePath(pbFileUtils.getNoticeImagePath())
+                                        .filesystemName(editorImage)
+                                        .build();
+            noticeMapper.insertNoticeImage(noticeImage);
+        }
+
+        return addResult;
+    }
 
     @Override
     public int modifyNotice(HttpServletRequest request) {
         String title = request.getParameter("title");
         String contents = request.getParameter("contents");
         int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
+
+        // DB에 저장된 기존 이미지 가져오기
+        List<NoticeImageDto> noticeImageDtoList = noticeMapper.getNoticeImageList(noticeNo);
+        List<String> noticeImageList = noticeImageDtoList.stream()
+                .map(noticeImageDto -> noticeImageDto.getFilesystemName())
+                .collect(Collectors.toList());
+
+        // Editor에 포함된 이미지 이름(filesystemName)
+        List<String> editorImageList = getEditorImageList(contents);
+
+        // Editor에 포함되어 있으나 기존 이미지에 없는 이미지는 NOTICE_IMAGE_T에 추가해야 함
+        editorImageList.stream()
+                .filter(editorImage -> !noticeImageList.contains(editorImage))         // 조건 : Editor에 포함되어 있으나 기존 이미지에 포함되어 있지 않다.
+                .map(editorImage -> NoticeImageDto.builder()                             // 변환 : Editor에 포함된 이미지 이름을 NoticeImageDto를 변환한다.
+                        .noticeNo(noticeNo)
+                        .imagePath(pbFileUtils.getNoticeImagePath())
+                        .filesystemName(editorImage)
+                        .build())
+                .forEach(noticeImageDto -> noticeMapper.insertNoticeImage(noticeImageDto));  // 순회 : 변환된 NoticeImageDto를 NOTICE_IMAGE_T에 추가한다.
+
+        // 기존 이미지에 있으나 Editor에 포함되지 않은 이미지는 삭제해야 함
+        List<NoticeImageDto> removeList = noticeImageDtoList.stream()
+                .filter(blogImageDto -> !editorImageList.contains(blogImageDto.getFilesystemName()))  // 조건 : 기존 이미지 중에서 Editor에 포함되어 있지 않다.
+                .collect(Collectors.toList());                                                        // 조건을 만족하는 noticeImageDto를 리스트로 반환한다.
+
+        for(NoticeImageDto noticeImageDto : removeList) {
+            // NOTICE_IMAGE_T에서 삭제
+            noticeMapper.deleteNoticeImage(noticeImageDto.getFilesystemName());  // 파일명은 UUID로 만들어졌으므로 파일명의 중복은 없다고 생각하면 된다.
+            // 파일 삭제
+            File file = new File(noticeImageDto.getImagePath(), noticeImageDto.getFilesystemName());
+            if(file.exists()) {
+                file.delete();
+            }
+        }
 
         NoticeDto notice = NoticeDto.builder()
                 .title(title)
@@ -93,12 +148,77 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public int removeNotice(HttpServletRequest request) {
         int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
+
+        // NOTICE_IMAGE_T 목록 가져와서 파일 삭제
+        List<NoticeImageDto> noticeImageList = noticeMapper.getNoticeImageList(noticeNo);
+        for(NoticeImageDto noticeImage : noticeImageList) {
+            File file = new File(noticeImage.getImagePath(), noticeImage.getFilesystemName());
+            if(file.exists()) {
+                file.delete();
+            }
+        }
+
+        noticeMapper.deleteNoticeImageList(noticeNo);
+
         return noticeMapper.deleteNotice(noticeNo);
     }
 
     @Override
     public int increaseHit(int noticeNo) {
         return noticeMapper.updateHit(noticeNo);
+    }
+
+    @Override
+    public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
+
+        // 이미지 저장 경로
+        String imagePath = pbFileUtils.getNoticeImagePath();
+        File dir = new File(imagePath);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+
+        // 이미지 파일 (CKEditor는 이미지를 upload라는 이름으로 보냄)
+        MultipartFile upload = multipartRequest.getFile("upload");
+
+        // 이미지가 저장될 이름
+        String originalFilename = upload.getOriginalFilename();
+        String filesystemName = pbFileUtils.getFilesystemName(originalFilename);
+
+        // 이미지 File 객체
+        File file = new File(dir, filesystemName);
+
+        // 저장
+        try {
+            upload.transferTo(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // CKEditor로 저장된 이미지의 경로를 JSON 형식으로 반환
+        return Map.of("uploaded", true
+                , "url", multipartRequest.getContextPath() + imagePath + "/" + filesystemName);
+    }
+
+    @Override
+    public List<String> getEditorImageList(String contents) {
+
+        // Editor에 추가한 이미지 목록 반환 (Jsoup)
+
+        List<String> editorImageList = new ArrayList<>();
+
+        Document document = Jsoup.parse(contents);
+        Elements elements =  document.getElementsByTag("img");
+
+        if(elements != null) {
+            for(Element element : elements) {
+                String src = element.attr("src");
+                String filesystemName = src.substring(src.lastIndexOf("/") + 1);
+                editorImageList.add(filesystemName);
+            }
+        }
+
+        return editorImageList;
     }
 
 }

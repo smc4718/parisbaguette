@@ -53,8 +53,8 @@
             <strong>작성자:</strong> <span th:text="${notice.userDto.name}"></span><br>
             <strong>조회수:</strong> <span th:text="${notice.hit}"></span><br>
         </p>
-        <p><strong>제목:</strong> <span th:text="${notice.title}"></span></p>
-        <p><strong>내용:</strong> <span th:text="${notice.contents}"></span></p>
+        <div><strong>제목:</strong> <div th:text="${notice.title}"></div></div>
+        <div><strong>내용:</strong> <div th:utext="${notice.contents}"></div></div>
 
         <div>
             <th:block th:if="${session.user.userNo == 1 or session.user.userNo == notice.userDto.userNo}">
@@ -115,6 +115,20 @@
             window.location.href = '/notice/list';
         });
     });
+
+    const fnModifyResult = () => {
+        let modifyResult = /*[[${modifyResult}]]*/ null;  //modifyResult가 전달되지 않으면 null을 사용
+        if(modifyResult !== null){
+            if(modifyResult === 1){
+                alert('공지가 수정되었습니다.');
+            } else {
+                alert('공지가 수정되지 않았습니다.');
+            }
+        }
+    }
+
+    fnModifyResult();
+
 </script>
 
 </body>

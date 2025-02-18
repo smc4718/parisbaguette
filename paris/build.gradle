@@ -44,6 +44,9 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+	// Jsoup
+	implementation 'org.jsoup:jsoup:1.18.3'
+
 	// jasypt 암복호화
 //	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }

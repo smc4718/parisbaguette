@@ -5,6 +5,8 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+	<link rel="stylesheet" th:href="@{/assets/css/ckeditor.css}" />
+	<script th:src="@{https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js}"></script>
 	<noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 </head>
 <body class="is-preload">
@@ -47,21 +49,24 @@
 	<div id="main">
 
 		<!-- Form -->
-		<form th:action="@{/notice/addNotice.do}" method="post">
+		<form id="frm_notice_add" th:action="@{/notice/addNotice.do}" method="post">
 			<div class="row gtr-uniform">
 				<div class="col-6 col-12-xsmall">
 					<h3>공지사항 작성</h3>
-					<input type="text" name="title" id="demo-name" placeholder="제목" required />
+					<input type="text" name="title" id="title" placeholder="제목" required />
 				</div>
 				<!-- Break -->
 				<div class="col-12">
-					<textarea name="contents" id="demo-message" placeholder="내용" rows="6" required></textarea>
+					<label for="contents"></label>
+					<textarea name="contents" id="contents" style="display: none"></textarea>
+					<div id="toolbar-container"></div>
+					<div id="ckeditor"></div>
 				</div>
 				<!-- Break -->
 				<div class="col-12">
 					<ul class="actions">
 						<li><input type="hidden" name="userNo" th:value="${session.user.userNo}"></li>
-						<li><input type="submit" value="작성 완료" class="primary" /></li>
+						<li><button type="submit" class="primary">작성완료</button></li>
 						<li><input type="reset" value="초기화" /></li>
 						<li>
 							<button type="button" class="ui-helper-reset">
@@ -93,6 +98,44 @@
 <script th:src="@{/assets/js/breakpoints.min.js}"></script>
 <script th:src="@{/assets/js/util.js}"></script>
 <script th:src="@{/assets/js/main.js}"></script>
+
+<script>
+	const fnCkeditor = () => {
+		DecoupledEditor
+				.create(document.getElementById('ckeditor'), {
+					ckfinder: {
+						// 이미지 업로드 경로
+						uploadUrl: '/notice/imageUpload.do'
+					}
+				})
+				.then(editor => {
+					const toolbarContainer = document.getElementById('toolbar-container');
+					toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+				})
+				.catch(error => {
+					console.error(error);
+				});
+	}
+
+	const fnNoticeAdd = () => {
+		$('#frm_notice_add').submit((ev) => {
+			if ($('#title').val() === '') {
+				alert('제목은 반드시 입력해야 합니다.');
+				ev.preventDefault();
+				return;
+			}
+			$('#contents').val($('#ckeditor').html());
+		});
+
+		// 초기화 버튼 클릭 시 CKEditor 내용 초기화
+		$('#frm_notice_add input[type="reset"]').click(() => {
+			window.editorInstance.setData(''); // CKEditor 내용 비우기
+		});
+	}
+
+	fnCkeditor();
+	fnNoticeAdd();
+</script>
 
 </body>
 </html>
