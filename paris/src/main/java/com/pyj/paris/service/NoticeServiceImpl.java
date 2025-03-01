@@ -13,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class NoticeServiceImpl implements NoticeService {
@@ -35,6 +37,8 @@ public class NoticeServiceImpl implements NoticeService {
     private final PbPageUtils pbPageUtils;
     private final PbFileUtils pbFileUtils;
 
+
+    @Transactional(readOnly = true)
     @Override
     public Map<String, Object> getNoticeList(HttpServletRequest request) {
 
@@ -76,7 +80,6 @@ public class NoticeServiceImpl implements NoticeService {
                 .userDto(UserDto.builder()
                         .userNo(userNo)
                         .build())
-                .hit(0) // 기본값 설정
                 .createdAt(createdAt)
                 .build();
 

@@ -17,3 +17,36 @@
 #ckeditor {
     border: 1px solid silver;
 }
+
+.ck.ck-content .image {
+    position: relative;
+}
+.ck.ck-content .image img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.ck.ck-content .image::before {
+    content: '';
+    padding-top: 100%;
+    display: block;
+}
+
+.contentsArea .image-style-side {
+    float: right;
+    margin-left: var(--ck-image-style-spacing);
+}
+.contentsArea figure.image {
+    margin: .9em auto;
+    text-align: center;
+}
+.contentsArea .image.image_resized {
+    display: block;
+    box-sizing: border-box;
+}
+.contentsArea .image.image_resized img {
+    width: 30%;
+}
