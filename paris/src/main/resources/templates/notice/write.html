@@ -104,9 +104,9 @@
 		DecoupledEditor
 				.create(document.getElementById('ckeditor'), {
 					ckfinder: {
-						// 이미지 업로드 경로
 						uploadUrl: '/notice/imageUpload.do'
-					}
+					},
+					disallowedContent: 'svg path'  // <svg>와 <path> 태그 제거
 				})
 				.then(editor => {
 					const toolbarContainer = document.getElementById('toolbar-container');
@@ -116,6 +116,7 @@
 					console.error(error);
 				});
 	}
+
 
 	const fnNoticeAdd = () => {
 		$('#frm_notice_add').submit((ev) => {

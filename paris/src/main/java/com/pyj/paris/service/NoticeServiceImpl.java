@@ -71,6 +71,9 @@ public class NoticeServiceImpl implements NoticeService {
         String contents = request.getParameter("contents");
         int userNo = Integer.parseInt(request.getParameter("userNo"));
 
+        // SVG 태그 필터링 (JSoup을 사용하여 제거)
+        contents = removeSvgTags(contents);
+
         // 현재 날짜 및 시간 설정
         String createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
@@ -88,10 +91,10 @@ public class NoticeServiceImpl implements NoticeService {
         // Editor에 추가한 이미지 목록 가져와서 NOTICE_IMAGE_T에 저장하기
         for(String editorImage : getEditorImageList(contents)) {
             NoticeImageDto noticeImage = NoticeImageDto.builder()
-                                        .noticeNo(notice.getNoticeNo())
-                                        .imagePath(pbFileUtils.getNoticeImagePath())
-                                        .filesystemName(editorImage)
-                                        .build();
+                    .noticeNo(notice.getNoticeNo())
+                    .imagePath(pbFileUtils.getNoticeImagePath())
+                    .filesystemName(editorImage)
+                    .build();
             noticeMapper.insertNoticeImage(noticeImage);
         }
 
@@ -104,6 +107,9 @@ public class NoticeServiceImpl implements NoticeService {
         String contents = request.getParameter("contents");
         int noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
 
+        // SVG 태그 필터링 (JSoup을 사용하여 제거)
+        contents = removeSvgTags(contents);
+
         // DB에 저장된 기존 이미지 가져오기
         List<NoticeImageDto> noticeImageDtoList = noticeMapper.getNoticeImageList(noticeNo);
         List<String> noticeImageList = noticeImageDtoList.stream()
@@ -115,22 +121,22 @@ public class NoticeServiceImpl implements NoticeService {
 
         // Editor에 포함되어 있으나 기존 이미지에 없는 이미지는 NOTICE_IMAGE_T에 추가해야 함
         editorImageList.stream()
-                .filter(editorImage -> !noticeImageList.contains(editorImage))         // 조건 : Editor에 포함되어 있으나 기존 이미지에 포함되어 있지 않다.
-                .map(editorImage -> NoticeImageDto.builder()                             // 변환 : Editor에 포함된 이미지 이름을 NoticeImageDto를 변환한다.
+                .filter(editorImage -> !noticeImageList.contains(editorImage))
+                .map(editorImage -> NoticeImageDto.builder()
                         .noticeNo(noticeNo)
                         .imagePath(pbFileUtils.getNoticeImagePath())
                         .filesystemName(editorImage)
                         .build())
-                .forEach(noticeImageDto -> noticeMapper.insertNoticeImage(noticeImageDto));  // 순회 : 변환된 NoticeImageDto를 NOTICE_IMAGE_T에 추가한다.
+                .forEach(noticeImageDto -> noticeMapper.insertNoticeImage(noticeImageDto));
 
         // 기존 이미지에 있으나 Editor에 포함되지 않은 이미지는 삭제해야 함
         List<NoticeImageDto> removeList = noticeImageDtoList.stream()
-                .filter(blogImageDto -> !editorImageList.contains(blogImageDto.getFilesystemName()))  // 조건 : 기존 이미지 중에서 Editor에 포함되어 있지 않다.
-                .collect(Collectors.toList());                                                        // 조건을 만족하는 noticeImageDto를 리스트로 반환한다.
+                .filter(blogImageDto -> !editorImageList.contains(blogImageDto.getFilesystemName()))
+                .collect(Collectors.toList());
 
         for(NoticeImageDto noticeImageDto : removeList) {
             // NOTICE_IMAGE_T에서 삭제
-            noticeMapper.deleteNoticeImage(noticeImageDto.getFilesystemName());  // 파일명은 UUID로 만들어졌으므로 파일명의 중복은 없다고 생각하면 된다.
+            noticeMapper.deleteNoticeImage(noticeImageDto.getFilesystemName());
             // 파일 삭제
             File file = new File(noticeImageDto.getImagePath(), noticeImageDto.getFilesystemName());
             if(file.exists()) {
@@ -147,6 +153,17 @@ public class NoticeServiceImpl implements NoticeService {
         int modifyResult = noticeMapper.updateNotice(notice);
 
         return modifyResult;
+    }
+
+    // SVG 태그를 제거하는 메서드
+    private String removeSvgTags(String contents) {
+        Document document = Jsoup.parse(contents);
+        // svg 태그를 제거
+        Elements svgElements = document.getElementsByTag("svg");
+        for (Element svg : svgElements) {
+            svg.remove();
+        }
+        return document.html();
     }
 
     @Override

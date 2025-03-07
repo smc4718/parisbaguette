@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>파리바게뜨 망우겸재 커뮤니티</title>
     <meta charset="utf-8" />
@@ -7,6 +7,21 @@
     <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
     <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 </head>
+
+<style>
+    .notice-content img {
+        max-width: 100%;  /* 부모 요소를 넘지 않도록 조절 */
+        height: auto;      /* 가로 비율 유지 */
+        display: block;    /* 블록 요소로 정렬 */
+        margin: 0 auto;    /* 가운데 정렬 */
+    }
+
+    .notice-content {
+        line-height: 0.1;  /* 줄 간격 조절 */
+    }
+
+</style>
+
 <body class="is-preload">
 
 <!-- Wrapper -->
@@ -54,7 +69,7 @@
             <strong>조회수:</strong> <span th:text="${notice.hit}"></span><br>
         </p>
         <div><strong>제목:</strong> <div th:text="${notice.title}"></div></div>
-        <div><strong>내용:</strong> <div th:utext="${notice.contents}"></div></div>
+        <div><strong>내용:</strong> <div th:utext="${notice.contents}" class="notice-content"></div></div>
 
         <div>
             <th:block th:if="${session.user.userNo == 1 or session.user.userNo == notice.userDto.userNo}">
