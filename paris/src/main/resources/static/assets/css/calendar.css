@@ -1,54 +1,62 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
+#calendar {
+    width: 300px;
+    margin: auto;
+    text-align: center;
 }
 
-th, td {
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.calendar-days, .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.day-label {
+    font-weight: bold;
+    padding: 5px;
+    background: #ddd;
+}
+
+.date {
     padding: 10px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-thead {
-    background-color: #f2f2f2;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* 승인 버튼 스타일 */
-.approve-btn {
-    background-color: green;
-    color: white;
-    padding: 5px 10px;
-    border: none;
     cursor: pointer;
+    border: 1px solid #ccc;
 }
 
-.approve-btn:hover {
-    background-color: darkgreen;
+.date:hover {
+    background: lightblue;
 }
 
-/* 거절 버튼 스타일 */
-.reject-btn {
-    background-color: red;
-    color: white;
-    padding: 5px 10px;
-    border: none;
+.disabled {
+    color: #bbb;
+    pointer-events: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content {
+    text-align: center;
+}
+
+.close {
     cursor: pointer;
-}
-
-.reject-btn:hover {
-    background-color: darkred;
-}
-
-/* 링크 스타일 */
-a {
-    text-decoration: none;
-    color: blue;
-}
-
-a:hover {
-    text-decoration: underline;
+    float: right;
+    font-size: 20px;
 }

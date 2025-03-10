@@ -37,4 +37,9 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationDto> getUserReservations(int userNo) {
         return reservationMapper.getUserReservations(userNo);
     }
+
+    @Override
+    public List<ReservationDto> getAllReservations() {
+        return reservationMapper.getAllReservations();
+    }
 }

@@ -3,38 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>대기 중인 예약 목록</title>
+    <title>예약 목록</title>
     <link rel="stylesheet" th:href="@{/assets/css/calendar.css}" />
 </head>
 <body>
 <header>
-    <h1>대기 중인 예약 목록</h1>
+    <h1>예약 목록</h1>
     <nav>
-        <a href="/main">홈</a> |
-        <a href="/user/login.form" th:if="${user == null}">로그인</a> |
-        <a href="/user/logout" th:if="${user != null}">로그아웃</a>
+        <a href="/main">홈</a>
+        <a href="/reservation/user">휴가 예약</a>
     </nav>
 </header>
 
 <main>
+    <!-- 대기 중인 예약 -->
     <h2>대기 중인 예약</h2>
     <table>
         <thead>
         <tr>
             <th>예약 번호</th>
-            <th>사용자</th>
-            <th>예약 날짜</th>
+            <th>이름</th>
+            <th>희망 날짜</th>
+            <th>사유</th>
             <th>상태</th>
             <th>작업</th>
         </tr>
         </thead>
         <tbody>
-        <th:block th:each="reservation : ${reservations}">
+        <th:block th:each="reservation : ${pendingReservations}">
             <tr>
                 <td th:text="${reservation.reservationNo}"></td>
                 <td th:text="${reservation.userDto.name}"></td>
                 <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${reservation.status}"></td>
+                <td th:text="${reservation.contents}"></td>
+                <td th:text="${reservation.statusLabel}"></td>
                 <td>
                     <form action="/reservation/approve" method="post" style="display:inline;">
                         <input type="hidden" name="reservationNo" th:value="${reservation.reservationNo}">
@@ -45,6 +47,31 @@
                         <button type="submit" class="reject-btn">거절</button>
                     </form>
                 </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <!-- 처리된 내역 -->
+    <h2>처리된 내역</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>예약 번호</th>
+            <th>이름</th>
+            <th>희망 날짜</th>
+            <th>사유</th>
+            <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="reservation : ${allReservations}">
+            <tr>
+                <td th:text="${reservation.reservationNo}"></td>
+                <td th:text="${reservation.userDto.name}"></td>
+                <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${reservation.contents}"></td>
+                <td th:text="${reservation.statusLabel}"></td>
             </tr>
         </th:block>
         </tbody>

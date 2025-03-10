@@ -14,7 +14,23 @@ import java.util.Date;
 public class ReservationDto {
     private int reservationNo;
     private int userNo;
-    private String reservationDate;
+    private UserDto userDto;
+    private Date reservationDate;
+    private String contents;
     private String status;
     private Date createdAt;
+
+    public String getStatusLabel() {
+        switch (this.status) {
+            case "PENDING":
+                return "승인대기중";
+            case "APPROVED":
+                return "승인";
+            case "REJECTED":
+                return "거절";
+            default:
+                return this.status;
+        }
+}
+
 }

@@ -12,4 +12,5 @@ public interface ReservationMapper {
     void rejectReservation(int reservationNo);
     List<ReservationDto> getPendingReservations();
     List<ReservationDto> getUserReservations(int userNo);
+    List<ReservationDto> getAllReservations();
 }

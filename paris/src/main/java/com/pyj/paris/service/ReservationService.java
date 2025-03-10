@@ -10,4 +10,5 @@ public interface ReservationService {
     void rejectReservation(int reservationNo); // 예약 거절
     List<ReservationDto> getPendingReservations(); // 대기 중인 예약 목록
     List<ReservationDto> getUserReservations(int userNo); // 특정 사용자의 예약 목록
+    List<ReservationDto> getAllReservations(); // 모든 예약 내역
 }

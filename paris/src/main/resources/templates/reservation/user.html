@@ -5,24 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>사용자 예약 목록</title>
     <link rel="stylesheet" th:href="@{/assets/css/calendar.css}" />
+    <script defer th:src="@{/assets/js/calendar.js}"></script>
 </head>
 <body>
 <header>
     <h1>사용자 예약 목록</h1>
     <nav>
-        <a href="/main">홈</a> |
-        <a href="/reservation/request.form">예약 요청</a> |
-        <a href="/user/logout">로그아웃</a>
+        <a href="/main">홈</a>
+        <a href="/reservation/pending">관리자 페이지</a>
     </nav>
 </header>
 
 <main>
+    <h2>달력에서 날짜를 선택하여 예약하세요</h2>
+
+    <!-- 달력 UI, 이 부분에 날짜와 예약 상태를 표시 -->
+    <div id="calendar">
+        <div class="calendar-header">
+            <!-- 달력 헤더(예: 월 선택) -->
+        </div>
+
+        <div class="calendar-grid">
+            <!-- 날짜와 예약 상태를 표시할 그리드, 여기에 날짜별 예약 상태를 표시 -->
+            <div th:each="day : ${days}" class="date" th:class="${day.hasReservation ? 'has-reservation' : ''}" th:data-date="${day.date}">
+                <span th:text="${day.dayOfMonth}"></span>
+                <ul>
+                    <li th:each="reservation : ${reservations}" th:if="${reservation.reservationDate == day.date}">
+                        <span th:text="${reservation.status}" th:class="${reservation.status == 'PENDING' ? 'pending' : (reservation.status == 'APPROVED' ? 'approved' : 'rejected')}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <h2>내 예약 내역</h2>
     <table>
         <thead>
         <tr>
             <th>예약 번호</th>
-            <th>예약 날짜</th>
+            <th>이름</th>
+            <th>희망 날짜</th>
+            <th>사유</th>
             <th>상태</th>
         </tr>
         </thead>
@@ -30,16 +53,30 @@
         <th:block th:each="reservation : ${reservations}">
             <tr>
                 <td th:text="${reservation.reservationNo}"></td>
+                <td th:text="${reservation.userDto.name}"></td>
                 <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${reservation.status}"></td>
+                <td th:text="${reservation.contents}"></td>
+                <td th:text="${reservation.statusLabel}"></td>
             </tr>
         </th:block>
         </tbody>
     </table>
-
-    <div>
-        <a href="/reservation/request.form">새 예약 요청</a>
-    </div>
 </main>
+
+<!-- 예약 요청 모달 -->
+<div id="reservationModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>예약 요청</h2>
+        <form action="/reservation/request" method="post">
+            <input type="hidden" id="selectedDate" name="reservationDate">
+            <p>선택한 날짜: <span id="displayDate"></span></p>
+            <label for="contents"></label>
+            <textarea name="contents" id="contents"></textarea>
+            <button type="submit">예약 요청</button>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>
