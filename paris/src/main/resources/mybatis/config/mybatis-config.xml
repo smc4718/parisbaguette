@@ -14,6 +14,7 @@
         <typeAlias alias="UserDto"            type="com.pyj.paris.dto.UserDto"/>
         <typeAlias alias="NoticeDto"          type="com.pyj.paris.dto.NoticeDto"/>
         <typeAlias alias="NoticeImageDto"     type="com.pyj.paris.dto.NoticeImageDto"/>
+        <typeAlias alias="ReservationDto"     type="com.pyj.paris.dto.ReservationDto"/>
     </typeAliases>
 
 </configuration>

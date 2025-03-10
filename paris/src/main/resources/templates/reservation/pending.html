@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대기 중인 예약 목록</title>
+    <link rel="stylesheet" th:href="@{/assets/css/calendar.css}" />
+</head>
+<body>
+<header>
+    <h1>대기 중인 예약 목록</h1>
+    <nav>
+        <a href="/main">홈</a> |
+        <a href="/user/login.form" th:if="${user == null}">로그인</a> |
+        <a href="/user/logout" th:if="${user != null}">로그아웃</a>
+    </nav>
+</header>
+
+<main>
+    <h2>대기 중인 예약</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>예약 번호</th>
+            <th>사용자</th>
+            <th>예약 날짜</th>
+            <th>상태</th>
+            <th>작업</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="reservation : ${reservations}">
+            <tr>
+                <td th:text="${reservation.reservationNo}"></td>
+                <td th:text="${reservation.userDto.name}"></td>
+                <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${reservation.status}"></td>
+                <td>
+                    <form action="/reservation/approve" method="post" style="display:inline;">
+                        <input type="hidden" name="reservationNo" th:value="${reservation.reservationNo}">
+                        <button type="submit" class="approve-btn">승인</button>
+                    </form>
+                    <form action="/reservation/reject" method="post" style="display:inline;">
+                        <input type="hidden" name="reservationNo" th:value="${reservation.reservationNo}">
+                        <button type="submit" class="reject-btn">거절</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

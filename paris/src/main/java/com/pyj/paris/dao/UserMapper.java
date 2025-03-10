@@ -7,6 +7,6 @@ import java.util.Map;
 
 @Mapper
 public interface UserMapper {
-    public UserDto getUser(Map<String, Object> map);
+    UserDto getUser(Map<String, Object> map);
 
 }

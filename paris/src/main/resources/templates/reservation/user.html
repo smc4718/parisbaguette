@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사용자 예약 목록</title>
+    <link rel="stylesheet" th:href="@{/assets/css/calendar.css}" />
+</head>
+<body>
+<header>
+    <h1>사용자 예약 목록</h1>
+    <nav>
+        <a href="/main">홈</a> |
+        <a href="/reservation/request.form">예약 요청</a> |
+        <a href="/user/logout">로그아웃</a>
+    </nav>
+</header>
+
+<main>
+    <h2>내 예약 내역</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>예약 번호</th>
+            <th>예약 날짜</th>
+            <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="reservation : ${reservations}">
+            <tr>
+                <td th:text="${reservation.reservationNo}"></td>
+                <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${reservation.status}"></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
+
+    <div>
+        <a href="/reservation/request.form">새 예약 요청</a>
+    </div>
+</main>
+</body>
+</html>

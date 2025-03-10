@@ -9,13 +9,13 @@ import java.util.Map;
 
 public interface NoticeService {
 
-    public Map<String, Object> getNoticeList(HttpServletRequest request);
-    public void getNotice(int noticeNo, Model model);
-    public int addNotice(HttpServletRequest request);
-    public int modifyNotice(HttpServletRequest request);
-    public int removeNotice(HttpServletRequest request);
-    public int increaseHit(int noticeNo);
+    Map<String, Object> getNoticeList(HttpServletRequest request);
+    void getNotice(int noticeNo, Model model);
+    int addNotice(HttpServletRequest request);
+    int modifyNotice(HttpServletRequest request);
+    int removeNotice(HttpServletRequest request);
+    int increaseHit(int noticeNo);
 
-    public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest);
-    public List<String> getEditorImageList(String contents);
+    Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest);
+    List<String> getEditorImageList(String contents);
 }

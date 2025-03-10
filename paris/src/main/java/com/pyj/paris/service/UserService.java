@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserService {
-    public void login(HttpServletRequest request, HttpServletResponse response) throws Exception;
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws Exception;
-    public UserDto getUser(String id);
+    void login(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    void logout(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    UserDto getUser(String id);
 }
