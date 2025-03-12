@@ -89,4 +89,14 @@
          ORDER BY RESERVATION_NO DESC
     </select>
 
+    <!-- 특정 월 예약 목록 -->
+    <select id="getReservationsByMonth" resultType="ReservationDto">
+        SELECT R.RESERVATION_NO, R.USER_NO, R.RESERVATION_DATE, R.CONTENTS, R.STATUS, R.CREATED_AT,
+               U.ID, U.PW, U.NAME, U.GENDER, U.EMAIL, U.HP, U.HP_SMS_YN, U.JOINED_AT
+          FROM RESERVATION_T R JOIN USER_T U
+            ON R.USER_NO = U.USER_NO
+         WHERE EXTRACT(YEAR FROM reservation_date) = #{year}
+           AND EXTRACT(MONTH FROM reservation_date) = #{month}
+    </select>
+
 </mapper>

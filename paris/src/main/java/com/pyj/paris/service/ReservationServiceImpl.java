@@ -42,4 +42,9 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationDto> getAllReservations() {
         return reservationMapper.getAllReservations();
     }
+
+    @Override
+    public List<ReservationDto> getReservationsByMonth(int year, int month) {
+        return reservationMapper.getReservationsByMonth(year, month);
+    }
 }

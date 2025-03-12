@@ -13,4 +13,5 @@ public interface ReservationMapper {
     List<ReservationDto> getPendingReservations();
     List<ReservationDto> getUserReservations(int userNo);
     List<ReservationDto> getAllReservations();
+    List<ReservationDto> getReservationsByMonth(int year, int month);
 }

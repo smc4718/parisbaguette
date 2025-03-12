@@ -8,14 +8,30 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: bold;
-    margin-bottom: 10px;
+    padding: 20px;
 }
 
-.calendar-days, .calendar-grid {
+.calendar-container {
+    max-width: 900px; /* 기존보다 넓게 */
+    margin: auto;
+}
+
+.calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
 }
 
 .day-label {
@@ -25,9 +41,17 @@
 }
 
 .date {
-    padding: 10px;
+    padding: 20px; /* 날짜 칸 크기 확대 */
+    min-height: 100px; /* 더 넓은 공간 확보 */
     cursor: pointer;
     border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    background-color: #f9f9f9;
+    font-size: 18px; /* 날짜 숫자 크기 증가 */
 }
 
 .date:hover {
@@ -37,6 +61,28 @@
 .disabled {
     color: #bbb;
     pointer-events: none;
+}
+
+.reservation-item {
+    width: 95%;
+    padding: 8px;
+    margin: 4px 0;
+    font-size: 14px;
+    text-align: center;
+    border-radius: 5px;
+    color: white;
+}
+
+.pending {
+    background-color: orange;
+}
+
+.approved {
+    background-color: green;
+}
+
+.rejected {
+    background-color: red;
 }
 
 .modal {

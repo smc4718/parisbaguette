@@ -8,12 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/reservation")
@@ -71,6 +69,21 @@ public class ReservationController {
         }
         model.addAttribute("reservations", reservationService.getUserReservations(user.getUserNo()));
         return "reservation/user";
+    }
+
+    @GetMapping("/list")
+    @ResponseBody
+    public Map<String, List<ReservationDto>> getReservationsByMonth(@RequestParam("year") int year,
+                                                                    @RequestParam("month") int month) {
+        List<ReservationDto> reservations = reservationService.getReservationsByMonth(year, month);
+        Map<String, List<ReservationDto>> reservationMap = new HashMap<>();
+
+        for (ReservationDto reservation : reservations) {
+            String dateKey = new SimpleDateFormat("yyyy-MM-dd").format(reservation.getReservationDate());
+            reservationMap.computeIfAbsent(dateKey, k -> new ArrayList<>()).add(reservation);
+        }
+
+        return reservationMap;
     }
 
 }

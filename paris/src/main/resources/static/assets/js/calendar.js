@@ -5,17 +5,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const displayDate = document.getElementById("displayDate");
     const selectedDateInput = document.getElementById("selectedDate");
 
-    // 현재 날짜 정보
     const today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
 
-    function renderCalendar(year, month) {
-        calendarEl.innerHTML = ""; // 기존 달력 초기화
-        const firstDay = new Date(year, month, 1).getDay(); // 월 시작 요일
-        const lastDate = new Date(year, month + 1, 0).getDate(); // 해당 월의 마지막 날짜
+    function fetchReservations(year, month) {
+        return fetch(`/reservation/list?year=${year}&month=${month + 1}`)
+            .then(response => response.json());
+    }
 
-        // 달력 헤더 (연도 및 월)
+    function renderCalendar(year, month) {
+        calendarEl.innerHTML = "";
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+
         const header = document.createElement("div");
         header.classList.add("calendar-header");
         header.innerHTML = `
@@ -25,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
         calendarEl.appendChild(header);
 
-        // 요일 표시
         const daysRow = document.createElement("div");
         daysRow.classList.add("calendar-days");
         const days = ["일", "월", "화", "수", "목", "금", "토"];
@@ -37,55 +39,67 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         calendarEl.appendChild(daysRow);
 
-        // 날짜 표시
         const datesGrid = document.createElement("div");
         datesGrid.classList.add("calendar-grid");
 
-        // 이전 달의 빈 칸
         for (let i = 0; i < firstDay; i++) {
             const emptyCell = document.createElement("div");
             emptyCell.classList.add("empty");
             datesGrid.appendChild(emptyCell);
         }
 
-        // 날짜 채우기
-        for (let date = 1; date <= lastDate; date++) {
-            const dateCell = document.createElement("div");
-            dateCell.classList.add("date");
-            dateCell.textContent = date;
+        fetchReservations(year, month).then(reservations => {
+            for (let date = 1; date <= lastDate; date++) {
+                const dateCell = document.createElement("div");
+                dateCell.classList.add("date");
+                dateCell.textContent = date;
 
-            const fullDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
-            dateCell.dataset.date = fullDate;
+                const fullDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+                dateCell.dataset.date = fullDate;
 
-            // 오늘 이전의 날짜는 비활성화
-            if (new Date(fullDate) < today) {
-                dateCell.classList.add("disabled");
-            } else {
-                dateCell.addEventListener("click", () => openModal(fullDate));
+                if (new Date(fullDate) < today) {
+                    dateCell.classList.add("disabled");
+                } else {
+                    dateCell.addEventListener("click", () => openModal(fullDate));
+                }
+
+                // 예약이 있을 경우 사용자 이름을 표시
+                if (reservations[fullDate]) {
+                    reservations[fullDate].forEach(reservation => {
+                        const reservationEl = document.createElement("div");
+                        reservationEl.classList.add("reservation-item");
+                        reservationEl.classList.add(reservation.status.toLowerCase());
+
+                        // 예약자 이름을 userDto가 있을 경우 표시
+                        const userName = reservation.userDto && reservation.userDto.name ? reservation.userDto.name : "";
+                        reservationEl.textContent = userName;
+
+                        dateCell.appendChild(reservationEl);
+                    });
+                }
+
+                datesGrid.appendChild(dateCell);
             }
 
-            datesGrid.appendChild(dateCell);
-        }
+            calendarEl.appendChild(datesGrid);
 
-        calendarEl.appendChild(datesGrid);
+            document.getElementById("prevMonth").addEventListener("click", () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar(currentYear, currentMonth);
+            });
 
-        // 이전/다음 월 버튼 이벤트
-        document.getElementById("prevMonth").addEventListener("click", () => {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar(currentYear, currentMonth);
-        });
-
-        document.getElementById("nextMonth").addEventListener("click", () => {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar(currentYear, currentMonth);
+            document.getElementById("nextMonth").addEventListener("click", () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar(currentYear, currentMonth);
+            });
         });
     }
 
@@ -105,6 +119,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // 초기 달력 렌더링
     renderCalendar(currentYear, currentMonth);
 });
