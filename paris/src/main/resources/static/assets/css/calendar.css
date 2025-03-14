@@ -1,7 +1,31 @@
+/* 달력 영역 */
 #calendar {
-    width: 300px;
-    margin: auto;
-    text-align: center;
+    width: 100%; /* 가로폭을 화면에 맞게 조정 */
+    max-width: 100vw; /* 달력의 최대 너비를 100%로 제한 */
+    height: auto; /* 달력의 높이를 자동으로 조정 */
+    margin-bottom: 30px; /* 달력과 예약 내역 사이에 여백 추가 */
+}
+
+/* 예약 내역 영역 */
+#main > section {
+    margin-top: 50px; /* 예약 내역이 달력과 겹치지 않도록 위쪽에 여백 추가 */
+}
+
+/* 전체 예약 내역 영역 여백 조정 */
+section table {
+    margin-top: 20px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    #calendar {
+        width: 95%;
+        margin-bottom: 20px; /* 모바일에서 여백을 좀 더 줄여줄 수 있음 */
+    }
+
+    #main > section {
+        margin-top: 20px; /* 모바일에서는 좀 더 좁혀서 표시 */
+    }
 }
 
 .calendar-header {
@@ -14,14 +38,15 @@
 }
 
 .calendar-container {
-    max-width: 900px; /* 기존보다 넓게 */
-    margin: auto;
+    width: 100%;
+    height: 100%;
+    margin: 0;
 }
 
 .calendar-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    font-size: 18px;
+    font-size: 20px; /* 글자 크기 키우기 */
     font-weight: bold;
     padding: 10px;
     text-align: center;
@@ -30,8 +55,9 @@
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    gap: 10px; /* 칸 간격 키우기 */
     padding: 10px;
+    height: 100%; /* 세로 크기 맞추기 */
 }
 
 .day-label {
@@ -41,7 +67,7 @@
 }
 
 .date {
-    padding: 20px; /* 날짜 칸 크기 확대 */
+    padding: 25px; /* 날짜 칸 크기 확대 */
     min-height: 100px; /* 더 넓은 공간 확보 */
     cursor: pointer;
     border: 1px solid #ccc;
@@ -51,7 +77,8 @@
     justify-content: flex-start;
     position: relative;
     background-color: #f9f9f9;
-    font-size: 18px; /* 날짜 숫자 크기 증가 */
+    font-size: 20px; /* 날짜 숫자 크기 증가 */
+    height: 100%; /* 날짜 칸 높이를 맞춤 */
 }
 
 .date:hover {
