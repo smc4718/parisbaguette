@@ -46,13 +46,13 @@
 
     <!-- Main -->
     <div id="main">
-        <h1>사용자 예약 목록</h1>
+        <h2>사용자 예약 목록</h2>
         <nav>
-            <h3><a href="/reservation/pending">관리자 페이지</a></h3>
+            <h3><a href="#" id="openAdminModal">휴일 관리</a></h3>
         </nav>
 
         <div>
-            <h2>달력에서 날짜를 선택하여 예약하세요</h2>
+            <h3>달력에서 날짜를 선택하여 예약하세요</h3>
             <section>
                 <!-- 달력 UI, 이 부분에 날짜와 예약 상태를 표시 -->
                 <div id="calendar">
@@ -101,6 +101,17 @@
             </section>
         </div>
 
+        <!-- 휴일 관리 페이지 모달 -->
+        <div id="adminModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>휴일 관리</h2>
+                <div id="adminContent">
+                    <!-- 여기에 AJAX로 불러온 pending.html 내용이 들어감 -->
+                </div>
+            </div>
+        </div>
+
         <!-- 예약 요청 모달 -->
         <div id="reservationModal" class="modal">
             <div class="modal-content">
@@ -116,6 +127,7 @@
             </div>
         </div>
     </div>
+
     <footer>
             <section>
                 <h3>Social</h3>
@@ -147,6 +159,73 @@
 <script th:src="@{/assets/js/breakpoints.min.js}"></script>
 <script th:src="@{/assets/js/util.js}"></script>
 <script th:src="@{/assets/js/main.js}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 날짜 클릭 시 예약 모달 열기
+        const dates = document.querySelectorAll(".date");
+        dates.forEach(date => {
+            date.addEventListener("click", function () {
+                const selectedDate = this.dataset.date;
+                const displayDate = document.getElementById("displayDate");
+                const modal = document.getElementById("reservationModal");
+
+                // 모달에 선택한 날짜 표시
+                displayDate.textContent = selectedDate;
+                document.getElementById("selectedDate").value = selectedDate;
+
+                // 모달 열기
+                modal.style.display = "block";
+            });
+        });
+
+        // 모달 닫기
+        const closeModal = document.querySelectorAll(".close");
+        closeModal.forEach(close => {
+            close.addEventListener("click", function () {
+                const modal = this.closest(".modal");
+                modal.style.display = "none";
+            });
+        });
+
+        // 관리자 모달 열기
+        document.getElementById("openAdminModal").addEventListener("click", function () {
+            const adminModal = document.getElementById("adminModal");
+
+            // 대기 중 예약 목록 AJAX로 불러오기
+            fetch("/reservation/pending")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("adminContent").innerHTML = data;
+                    adminModal.style.display = "block";
+                })
+                .catch(error => {
+                    console.error("에러 발생:", error);
+                });
+        });
+
+        // 모달 닫기
+        const closeModalBtns = document.querySelectorAll(".close");
+        closeModalBtns.forEach(close => {
+            close.addEventListener("click", function () {
+                const modal = this.closest(".modal");
+                modal.style.display = "none";
+            });
+        });
+
+        // 모달 열기/닫기 (추가된 코드)
+        document.getElementById("openAdminModal").addEventListener("click", function() {
+            document.getElementById("adminModal").classList.add("show");
+            document.querySelector(".modal-overlay").classList.add("show");
+        });
+
+        // 닫기 버튼 클릭 시 모달을 닫기
+        document.querySelector(".close").addEventListener("click", function() {
+            document.getElementById("adminModal").classList.remove("show");
+            document.querySelector(".modal-overlay").classList.remove("show");
+        });
+    });
+</script>
 
 </body>
 </html>

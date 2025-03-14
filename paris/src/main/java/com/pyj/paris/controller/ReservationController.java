@@ -43,15 +43,23 @@ public class ReservationController {
     }
 
     @PostMapping("/approve")
-    public String approveReservation(@RequestParam("reservationNo") int reservationNo) {
+    @ResponseBody
+    public Map<String, String> approveReservation(@RequestParam("reservationNo") int reservationNo) {
         reservationService.approveReservation(reservationNo);
-        return "redirect:/reservation/pending";
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "approved");
+        response.put("message", "예약이 승인되었습니다.");
+        return response;
     }
 
     @PostMapping("/reject")
-    public String rejectReservation(@RequestParam("reservationNo") int reservationNo) {
+    @ResponseBody
+    public Map<String, String> rejectReservation(@RequestParam("reservationNo") int reservationNo) {
         reservationService.rejectReservation(reservationNo);
-        return "redirect:/reservation/pending";
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "rejected");
+        response.put("message", "예약이 거절되었습니다.");
+        return response;
     }
 
     @GetMapping("/pending")

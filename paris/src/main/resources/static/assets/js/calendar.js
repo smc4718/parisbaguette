@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const displayDate = document.getElementById("displayDate");
     const selectedDateInput = document.getElementById("selectedDate");
 
+    const adminModal = document.getElementById("adminModal");
+    const adminContent = document.getElementById("adminContent");
+    const openAdminBtn = document.getElementById("openAdminModal");
+    const closeAdminModal = document.querySelector("#adminModal .close");
+
     const today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
@@ -63,14 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     dateCell.addEventListener("click", () => openModal(fullDate));
                 }
 
-                // 예약이 있을 경우 사용자 이름을 표시
                 if (reservations[fullDate]) {
                     reservations[fullDate].forEach(reservation => {
                         const reservationEl = document.createElement("div");
                         reservationEl.classList.add("reservation-item");
                         reservationEl.classList.add(reservation.status.toLowerCase());
 
-                        // 예약자 이름을 userDto가 있을 경우 표시
                         const userName = reservation.userDto && reservation.userDto.name ? reservation.userDto.name : "";
                         reservationEl.textContent = userName;
 
@@ -118,6 +121,85 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.style.display = "none";
         }
     });
+
+    openAdminBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        refreshPendingList();
+    });
+
+    closeAdminModal.addEventListener("click", function () {
+        adminModal.style.display = "none";
+        document.getElementById("adminModal").classList.remove("show");
+        document.querySelector(".modal-overlay").classList.remove("show");
+    });
+
+    window.addEventListener("click", function (event) {
+        if (event.target === adminModal) {
+            adminModal.style.display = "none";
+            document.getElementById("adminModal").classList.remove("show");
+            document.querySelector(".modal-overlay").classList.remove("show");
+        }
+    });
+
+    /** 승인 및 거절 버튼 클릭 이벤트 핸들러 */
+    document.addEventListener("click", function (event) {
+        if (event.target.classList.contains("approve-btn") || event.target.classList.contains("reject-btn")) {
+            event.preventDefault();
+
+            const reservationNo = event.target.getAttribute("data-reservation-no");
+            console.log("Clicked reservationNo:", reservationNo);  // 값 확인
+
+            if (!reservationNo) {
+                alert("예약 번호가 없습니다. 다시 시도해 주세요.");
+                return;
+            }
+
+            const action = event.target.classList.contains("approve-btn") ? "approve" : "reject";
+            updateReservationStatus(reservationNo, action);
+        }
+    });
+
+
+    function updateReservationStatus(reservationNo, action) {
+        console.log('reservationNo:', reservationNo);  // reservationNo 값 출력 확인
+
+        const intReservationNo = parseInt(reservationNo, 10);  // reservationNo를 숫자로 변환
+
+        // reservationNo가 유효한 숫자인지 확인
+        if (isNaN(intReservationNo)) {
+            alert("예약 번호가 잘못되었습니다.");
+            return;
+        }
+
+        fetch(`/reservation/${action}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `reservationNo=${intReservationNo}`  // 숫자 형식으로 전달
+        })
+            .then(response => response.json()) // JSON으로 응답 받기
+            .then(data => {
+                alert(data.message);  // 응답 메시지 출력 ("예약이 승인되었습니다." 등)
+                refreshPendingList(); // 모달 내부 목록 업데이트
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
+    }
+
+
+    function refreshPendingList() {
+        fetch("/reservation/pending")  // 최신 목록 다시 불러오기
+            .then(response => response.text())
+            .then(data => {
+                adminContent.innerHTML = data;
+                adminModal.style.display = "block";
+                document.getElementById("adminModal").classList.add("show");
+                document.querySelector(".modal-overlay").classList.add("show");
+            })
+            .catch(error => console.error("목록 업데이트 오류:", error));
+    }
 
     renderCalendar(currentYear, currentMonth);
 });

@@ -7,13 +7,6 @@
     <link rel="stylesheet" th:href="@{/assets/css/calendar.css}" />
 </head>
 <body>
-<header>
-    <h1>예약 목록</h1>
-    <nav>
-        <a href="/main">홈</a>
-        <a href="/reservation/user">휴가 예약</a>
-    </nav>
-</header>
 
 <main>
     <!-- 대기 중인 예약 -->
@@ -36,16 +29,10 @@
                 <td th:text="${reservation.userDto.name}"></td>
                 <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
                 <td th:text="${reservation.contents}"></td>
-                <td th:text="${reservation.statusLabel}"></td>
+                <td class="status-column" th:text="${reservation.statusLabel}"></td>
                 <td>
-                    <form action="/reservation/approve" method="post" style="display:inline;">
-                        <input type="hidden" name="reservationNo" th:value="${reservation.reservationNo}">
-                        <button type="submit" class="approve-btn">승인</button>
-                    </form>
-                    <form action="/reservation/reject" method="post" style="display:inline;">
-                        <input type="hidden" name="reservationNo" th:value="${reservation.reservationNo}">
-                        <button type="submit" class="reject-btn">거절</button>
-                    </form>
+                    <button class="approve-btn" th:data-reservation-no="${reservation.reservationNo}">승인</button>
+                    <button class="reject-btn" th:data-reservation-no="${reservation.reservationNo}">거절</button>
                 </td>
             </tr>
         </th:block>
@@ -53,29 +40,50 @@
     </table>
 
     <!-- 처리된 내역 -->
-    <h2>처리된 내역</h2>
+    <h2>모든 내역</h2>
     <table>
-        <thead>
         <tr>
             <th>예약 번호</th>
-            <th>이름</th>
-            <th>희망 날짜</th>
-            <th>사유</th>
+            <th>사용자 이름</th>
+            <th>예약 날짜</th>
             <th>상태</th>
         </tr>
-        </thead>
-        <tbody>
         <th:block th:each="reservation : ${allReservations}">
             <tr>
                 <td th:text="${reservation.reservationNo}"></td>
                 <td th:text="${reservation.userDto.name}"></td>
                 <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${reservation.contents}"></td>
-                <td th:text="${reservation.statusLabel}"></td>
+                <td class="status-column" th:text="${reservation.statusLabel}"></td>
             </tr>
         </th:block>
-        </tbody>
     </table>
 </main>
+
+<script>
+    // 예약 상태 업데이트 함수 (AJAX 요청)
+    function updateReservationStatus(reservationNo, action) {
+        fetch(`/reservation/${action}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: `reservationNo=${reservationNo}`
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("서버 응답 실패");
+                }
+                return response.text();
+            })
+            .then(() => {
+                alert("처리되었습니다.");
+                location.reload();  // 페이지 새로고침하여 최신 목록 반영
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
+    }
+</script>
+
 </body>
 </html>
