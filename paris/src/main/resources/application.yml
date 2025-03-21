@@ -7,8 +7,8 @@ spring:
       username: PB
       password: 1735
 
-      thymeleaf:
-        cache: false  #어플 재실행 없이 실시간 타임리프 반영이기에, 배포시에는 설정 지우거나, 반드시 true 로 바꿔줘야함
+  thymeleaf:
+    cache: false  #어플 재실행 없이 실시간 타임리프 반영이기에, 배포시에는 설정 지우거나, 반드시 true 로 바꿔줘야함
 
   config:
     import: optional:file:.env[.properties]
