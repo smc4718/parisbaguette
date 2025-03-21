@@ -147,7 +147,9 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const reservationNo = event.target.getAttribute("data-reservation-no");
+            const phoneNumber = event.target.getAttribute("data-phone-number");  // 전화번호 가져오기
             console.log("Clicked reservationNo:", reservationNo);  // 값 확인
+            console.log("Phone Number:", phoneNumber);  // 값 확인
 
             if (!reservationNo) {
                 alert("예약 번호가 없습니다. 다시 시도해 주세요.");
@@ -155,13 +157,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const action = event.target.classList.contains("approve-btn") ? "approve" : "reject";
-            updateReservationStatus(reservationNo, action);
+            updateReservationStatus(reservationNo, action, phoneNumber);  // 전화번호와 함께 전달
         }
     });
 
 
-    function updateReservationStatus(reservationNo, action) {
+    function updateReservationStatus(reservationNo, action, phoneNumber) {
         console.log('reservationNo:', reservationNo);  // reservationNo 값 출력 확인
+        console.log('phoneNumber:', phoneNumber);  // phoneNumber 값 출력 확인
 
         const intReservationNo = parseInt(reservationNo, 10);  // reservationNo를 숫자로 변환
 
@@ -176,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: `reservationNo=${intReservationNo}`  // 숫자 형식으로 전달
+            body: `reservationNo=${intReservationNo}&phoneNumber=${encodeURIComponent(phoneNumber)}`  // 전화번호와 함께 전달
         })
             .then(response => response.json()) // JSON으로 응답 받기
             .then(data => {

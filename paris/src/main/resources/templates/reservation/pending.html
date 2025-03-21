@@ -31,8 +31,10 @@
                 <td th:text="${reservation.contents}"></td>
                 <td class="status-column" th:text="${reservation.statusLabel}"></td>
                 <td>
-                    <button class="approve-btn" th:data-reservation-no="${reservation.reservationNo}">승인</button>
-                    <button class="reject-btn" th:data-reservation-no="${reservation.reservationNo}">거절</button>
+                    <button class="approve-btn" th:data-reservation-no="${reservation.reservationNo}"
+                            th:data-phone-number="${reservation.userDto.hp}">승인</button>
+                    <button class="reject-btn" th:data-reservation-no="${reservation.reservationNo}"
+                            th:data-phone-number="${reservation.userDto.hp}">거절</button>
                 </td>
             </tr>
         </th:block>

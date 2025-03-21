@@ -6,6 +6,7 @@ import com.pyj.paris.service.ReservationService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,23 +44,26 @@ public class ReservationController {
     }
 
     @PostMapping("/approve")
-    @ResponseBody
-    public Map<String, String> approveReservation(@RequestParam("reservationNo") int reservationNo) {
-        reservationService.approveReservation(reservationNo);
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "approved");
-        response.put("message", "예약이 승인되었습니다.");
-        return response;
+    public ResponseEntity<String> approveReservation(@RequestParam int reservationNo, @RequestParam String phoneNumber) {
+        try {
+            // 예약 승인 처리
+            reservationService.approveReservation(reservationNo, phoneNumber);
+            return ResponseEntity.ok("예약 승인 완료 및 SMS 발송 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("예약 승인 처리 중 오류 발생: " + e.getMessage());
+        }
     }
 
+
     @PostMapping("/reject")
-    @ResponseBody
-    public Map<String, String> rejectReservation(@RequestParam("reservationNo") int reservationNo) {
-        reservationService.rejectReservation(reservationNo);
-        Map<String, String> response = new HashMap<>();
-        response.put("status", "rejected");
-        response.put("message", "예약이 거절되었습니다.");
-        return response;
+    public ResponseEntity<String> rejectReservation(@RequestParam int reservationNo, @RequestParam String phoneNumber) {
+        try {
+            // 예약 거절 처리
+            reservationService.rejectReservation(reservationNo, phoneNumber);
+            return ResponseEntity.ok("예약 거절 완료 및 SMS 발송 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("예약 거절 처리 중 오류 발생: " + e.getMessage());
+        }
     }
 
     @GetMapping("/pending")
