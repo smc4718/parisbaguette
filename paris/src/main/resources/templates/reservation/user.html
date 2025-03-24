@@ -7,7 +7,6 @@
     <title>휴일 예약</title>
     <link rel="stylesheet" th:href="@{/assets/css/calendar.css}" />
     <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
-    <script defer th:src="@{/assets/js/calendar.js}"></script>
     <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 </head>
 <body class="is-preload">
@@ -52,7 +51,7 @@
         </nav>
 
         <div>
-            <h3 style="margin-left: 450px">달력에서 날짜를 선택하여 예약하세요</h3>
+            <h3 style="margin-left: 450px">※ 달력에서 날짜를 선택하여 예약하세요</h3>
             <section>
                 <!-- 달력 UI, 이 부분에 날짜와 예약 상태를 표시 -->
                 <div id="calendar">
@@ -226,6 +225,7 @@
         });
     });
 </script>
+<script defer th:src="@{/assets/js/calendar.js}"></script>
 
 </body>
 </html>

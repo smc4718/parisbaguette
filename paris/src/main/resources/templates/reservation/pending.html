@@ -43,49 +43,33 @@
 
     <!-- 처리된 내역 -->
     <h2>모든 내역</h2>
-    <table>
-        <tr>
-            <th>예약 번호</th>
-            <th>사용자 이름</th>
-            <th>예약 날짜</th>
-            <th>상태</th>
-        </tr>
-        <th:block th:each="reservation : ${allReservations}">
+    <div id="allReservationsContainer">
+        <table>
+            <thead>
             <tr>
-                <td th:text="${reservation.reservationNo}"></td>
-                <td th:text="${reservation.userDto.name}"></td>
-                <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
-                <td class="status-column" th:text="${reservation.statusLabel}"></td>
+                <th>예약 번호</th>
+                <th>사용자 이름</th>
+                <th>예약 날짜</th>
+                <th>상태</th>
             </tr>
-        </th:block>
-    </table>
+            </thead>
+            <tbody>
+            <th:block th:each="reservation : ${allReservations}">
+                <tr>
+                    <td th:text="${reservation.reservationNo}"></td>
+                    <td th:text="${reservation.userDto.name}"></td>
+                    <td th:text="${#dates.format(reservation.reservationDate, 'yyyy-MM-dd')}"></td>
+                    <td class="status-column" th:text="${reservation.statusLabel}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
 </main>
 
 <script>
-    // 예약 상태 업데이트 함수 (AJAX 요청)
-    function updateReservationStatus(reservationNo, action) {
-        fetch(`/reservation/${action}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: `reservationNo=${reservationNo}`
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("서버 응답 실패");
-                }
-                return response.text();
-            })
-            .then(() => {
-                alert("처리되었습니다.");
-                location.reload();  // 페이지 새로고침하여 최신 목록 반영
-            })
-            .catch(error => {
-                console.error("에러 발생:", error);
-            });
-    }
 </script>
 
+<script defer th:src="@{/assets/js/calendar.js}"></script>
 </body>
 </html>

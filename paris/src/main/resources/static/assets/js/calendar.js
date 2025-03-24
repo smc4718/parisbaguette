@@ -10,6 +10,25 @@ document.addEventListener("DOMContentLoaded", function () {
     const openAdminBtn = document.getElementById("openAdminModal");
     const closeAdminModal = document.querySelector("#adminModal .close");
 
+    // adminModal과 openAdminBtn이 존재할 경우만 실행
+    if (adminModal && openAdminBtn) {
+        openAdminBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            adminModal.classList.add("show");
+            document.querySelector(".modal-overlay")?.classList.add("show");
+            updatePendingReservations();
+        });
+
+        if (closeAdminModal) {
+            closeAdminModal.addEventListener("click", function () {
+                adminModal.classList.remove("show");
+                document.querySelector(".modal-overlay")?.classList.remove("show");
+            });
+        }
+    } else {
+        console.error("❗️ adminModal 또는 openAdminBtn 요소를 찾을 수 없습니다.");
+    }
+
     const today = new Date();
     let currentYear = today.getFullYear();
     let currentMonth = today.getMonth();
@@ -112,44 +131,36 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.style.display = "block";
     }
 
-    closeModal.addEventListener("click", () => {
-        modal.style.display = "none";
-    });
-
-    window.addEventListener("click", (event) => {
-        if (event.target === modal) {
+    if (closeModal) {
+        closeModal.addEventListener("click", () => {
             modal.style.display = "none";
+            location.reload();  // 모달 닫을 경우 페이지 새로고침
+        });
+    }
+
+    if (adminModal && openAdminBtn) {
+        openAdminBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            adminModal.classList.add("show"); // 'adminModal' 변수 사용
+            document.querySelector(".modal-overlay")?.classList.add("show"); // ?.로 null 체크 추가
+            updatePendingReservations(); // 대기 목록 업데이트 추가
+        });
+
+        if (closeAdminModal) {
+            closeAdminModal.addEventListener("click", function () {
+                adminModal.classList.remove("show"); // 'adminModal' 변수 사용
+                document.querySelector(".modal-overlay")?.classList.remove("show"); // ?.로 null 체크 추가
+            });
         }
-    });
+    }
 
-    openAdminBtn.addEventListener("click", function (event) {
-        event.preventDefault();
-        refreshPendingList();
-    });
 
-    closeAdminModal.addEventListener("click", function () {
-        adminModal.style.display = "none";
-        document.getElementById("adminModal").classList.remove("show");
-        document.querySelector(".modal-overlay").classList.remove("show");
-    });
-
-    window.addEventListener("click", function (event) {
-        if (event.target === adminModal) {
-            adminModal.style.display = "none";
-            document.getElementById("adminModal").classList.remove("show");
-            document.querySelector(".modal-overlay").classList.remove("show");
-        }
-    });
-
-    /** 승인 및 거절 버튼 클릭 이벤트 핸들러 */
     document.addEventListener("click", function (event) {
         if (event.target.classList.contains("approve-btn") || event.target.classList.contains("reject-btn")) {
             event.preventDefault();
 
             const reservationNo = event.target.getAttribute("data-reservation-no");
-            const phoneNumber = event.target.getAttribute("data-phone-number");  // 전화번호 가져오기
-            console.log("Clicked reservationNo:", reservationNo);  // 값 확인
-            console.log("Phone Number:", phoneNumber);  // 값 확인
+            const phoneNumber = event.target.getAttribute("data-phone-number");
 
             if (!reservationNo) {
                 alert("예약 번호가 없습니다. 다시 시도해 주세요.");
@@ -157,51 +168,113 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const action = event.target.classList.contains("approve-btn") ? "approve" : "reject";
-            updateReservationStatus(reservationNo, action, phoneNumber);  // 전화번호와 함께 전달
+            updateReservationStatus(reservationNo, action, phoneNumber, event.target);
         }
     });
 
-
-    function updateReservationStatus(reservationNo, action, phoneNumber) {
-        console.log('reservationNo:', reservationNo);  // reservationNo 값 출력 확인
-        console.log('phoneNumber:', phoneNumber);  // phoneNumber 값 출력 확인
-
-        const intReservationNo = parseInt(reservationNo, 10);  // reservationNo를 숫자로 변환
-
-        // reservationNo가 유효한 숫자인지 확인
-        if (isNaN(intReservationNo)) {
-            alert("예약 번호가 잘못되었습니다.");
-            return;
-        }
-
+    function updateReservationStatus(reservationNo, action, phoneNumber, btnElement) {
         fetch(`/reservation/${action}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: `reservationNo=${intReservationNo}&phoneNumber=${encodeURIComponent(phoneNumber)}`  // 전화번호와 함께 전달
+            body: `reservationNo=${reservationNo}&phoneNumber=${encodeURIComponent(phoneNumber)}`
         })
-            .then(response => response.json()) // JSON으로 응답 받기
+            .then(response => {
+                const contentType = response.headers.get("content-type");
+
+                if (contentType && contentType.includes("application/json")) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => ({ message: text }));
+                }
+            })
             .then(data => {
-                alert(data.message);  // 응답 메시지 출력 ("예약이 승인되었습니다." 등)
-                refreshPendingList(); // 모달 내부 목록 업데이트
+                alert(data.message || "알 수 없는 응답입니다.");
+
+                // 대기 목록에서 해당 예약 제거
+                removePendingReservation(reservationNo);
+
+                // '모든 내역' 즉시 업데이트
+                updateAllReservations().then(() => {
+                    console.log("모든 내역이 성공적으로 업데이트되었습니다.");
+                });
             })
             .catch(error => {
                 console.error("에러 발생:", error);
             });
     }
 
+    function removePendingReservation(reservationNo) {
+        const pendingRow = document.querySelector(`.approve-btn[data-reservation-no="${reservationNo}"]`)?.closest("tr");
+        if (pendingRow) {
+            pendingRow.remove();
+        }
+    }
 
-    function refreshPendingList() {
-        fetch("/reservation/pending")  // 최신 목록 다시 불러오기
+    function updatePendingReservations() {
+        fetch("/reservation/pending")
             .then(response => response.text())
             .then(data => {
-                adminContent.innerHTML = data;
-                adminModal.style.display = "block";
-                document.getElementById("adminModal").classList.add("show");
-                document.querySelector(".modal-overlay").classList.add("show");
+                const pendingContainer = document.querySelector("#adminContent");
+                if (pendingContainer) {
+                    pendingContainer.innerHTML = data;
+                }
             })
-            .catch(error => console.error("목록 업데이트 오류:", error));
+            .catch(error => console.error("대기 중인 예약 목록 업데이트 오류:", error));
+    }
+
+    function formatDate(timestamp) {
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 2자리수로 월 표시
+        const day = String(date.getDate()).padStart(2, '0');       // 2자리수로 일 표시
+        return `${year}-${month}-${day}`;
+    }
+
+    function updateAllReservations() {
+        fetch("/reservation/all")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("서버에서 데이터를 불러오는 데 실패했습니다.");
+                }
+                return response.json();  // JSON 데이터 처리
+            })
+            .then(data => {
+                const allReservationsContainer = document.getElementById("allReservationsContainer");
+
+                if (allReservationsContainer) {
+                    let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>예약 번호</th>
+                                <th>사용자 이름</th>
+                                <th>예약 날짜</th>
+                                <th>상태</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                    data.forEach(reservation => {
+                        html += `
+                        <tr>
+                            <td>${reservation.reservationNo}</td>
+                            <td>${reservation.userDto?.name || '-'}</td>
+                            <td>${formatDate(reservation.reservationDate)}</td> <!-- 수정된 부분 -->
+                            <td class="status-column">${reservation.statusLabel}</td>
+                        </tr>
+                    `;
+                    });
+
+                    html += `</tbody></table>`;
+                    allReservationsContainer.innerHTML = html;
+                } else {
+                    console.error("❗️ '모든 내역'을 찾을 수 없습니다. HTML 구조를 확인하세요.");
+                }
+            })
+            .catch(error => console.error("모든 내역 업데이트 오류:", error));
     }
 
     renderCalendar(currentYear, currentMonth);

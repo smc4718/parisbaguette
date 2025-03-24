@@ -44,25 +44,49 @@ public class ReservationController {
     }
 
     @PostMapping("/approve")
-    public ResponseEntity<String> approveReservation(@RequestParam int reservationNo, @RequestParam String phoneNumber) {
+    public ResponseEntity<Map<String, String>> approveReservation(
+            @RequestParam int reservationNo,
+            @RequestParam String phoneNumber) {
         try {
-            // 예약 승인 처리
             reservationService.approveReservation(reservationNo, phoneNumber);
-            return ResponseEntity.ok("예약 승인 완료 및 SMS 발송 완료");
+
+            // JSON 형식으로 응답 반환
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "예약이 승인되었습니다.");
+            return ResponseEntity
+                    .ok()
+                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                    .body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("예약 승인 처리 중 오류 발생: " + e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "예약 승인 처리 중 오류 발생: " + e.getMessage());
+            return ResponseEntity
+                    .status(500)
+                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
         }
     }
 
-
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectReservation(@RequestParam int reservationNo, @RequestParam String phoneNumber) {
+    public ResponseEntity<Map<String, String>> rejectReservation(
+            @RequestParam int reservationNo,
+            @RequestParam String phoneNumber) {
         try {
-            // 예약 거절 처리
             reservationService.rejectReservation(reservationNo, phoneNumber);
-            return ResponseEntity.ok("예약 거절 완료 및 SMS 발송 완료");
+
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "예약이 거절되었습니다.");
+            return ResponseEntity
+                    .ok()
+                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                    .body(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("예약 거절 처리 중 오류 발생: " + e.getMessage());
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "예약 거절 처리 중 오류 발생: " + e.getMessage());
+            return ResponseEntity
+                    .status(500)
+                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                    .body(errorResponse);
         }
     }
 
@@ -96,6 +120,13 @@ public class ReservationController {
         }
 
         return reservationMap;
+    }
+
+    @GetMapping("/all")
+    @ResponseBody
+    public List<ReservationDto> getAllReservations() {
+        // 모든 예약 내역
+        return reservationService.getAllReservations();
     }
 
 }
