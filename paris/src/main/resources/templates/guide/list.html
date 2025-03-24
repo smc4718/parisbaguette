@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}" />
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
+    <title>파리바게뜨 망우겸재 커뮤니티</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+        #guideContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .guide-card {
+            width: 320px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .guide-card h3 {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        .guide-card p {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper" class="fade-in">
+
+    <!-- Header -->
+    <header id="header">
+        <a th:href="@{/main}" class="logo">Paris Baguette</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li><a th:href="@{/notice/list}">오늘의 공지</a></li>
+            <li><a th:href="@{/event/list}">매장 이벤트</a></li>
+            <li><a th:href="@{/reservation/user}">휴일 예약</a></li>
+            <li class="active"><a th:href="@{/guide/guideHome}">신입 가이드</a></li>
+        </ul>
+        <span th:if="${session.user != null}">
+            <span th:text="${session.user.name} + '님'"></span>
+            <a th:href="@{/user/logout}">로그아웃</a>
+        </span>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+        <h2>신입 가이드</h2>
+
+        <!-- 가이드 추가 버튼 -->
+        <ul class="actions">
+            <li><a href="#" id="openGuideModal" class="button button-location">가이드 추가</a></li>
+        </ul>
+
+        <!-- 가이드 추가 모달 -->
+        <div id="guideModal" style="display: none;">
+            <h3>신입 가이드 추가</h3>
+            <form id="addGuideForm">
+                <label for="title">제목:</label>
+                <input type="text" id="title" name="title" required>
+
+                <label for="youtubeUrl">유튜브 URL:</label>
+                <input type="text" id="youtubeUrl" name="youtubeUrl" required>
+
+                <label for="description">설명:</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <button type="submit">추가하기</button>
+                <button type="button" id="closeGuideModal">취소</button>
+            </form>
+        </div>
+
+        <div id="guideContainer">
+            <p id="noGuideMessage" style="display: none;">현재 등록된 가이드가 없습니다.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script th:src="@{/assets/js/jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrollex.min.js}"></script>
+<script th:src="@{/assets/js/jquery.scrolly.min.js}"></script>
+<script th:src="@{/assets/js/browser.min.js}"></script>
+<script th:src="@{/assets/js/breakpoints.min.js}"></script>
+<script th:src="@{/assets/js/util.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
+<script>
+    $(document).ready(function() {
+        let page = 1;
+        const size = 10;
+
+        // 가이드 목록 로드
+        function loadGuides() {
+            $.ajax({
+                url: `/guide/list?page=${page}&size=${size}`,
+                method: 'GET',
+                success: function(guides) {
+                    console.log("가이드 목록 데이터:", guides);
+
+                    if (guides.length === 0) {
+                        $('#noGuideMessage').show();  // 안내 메시지 표시
+                        $(window).off('scroll');
+                        return;
+                    }
+
+                    guides.forEach(guide => {
+                        $('#guideContainer').append(`
+                            <div class="guide-card">
+                                <h3>${guide.title}</h3>
+                                <iframe width="320" height="180"
+                                        src="${guide.youtubeUrl}"
+                                        frameborder="0" allowfullscreen>
+                                </iframe>
+                                <p>${guide.description}</p>
+                            </div>
+                        `);
+                    });
+
+                    page++;
+                },
+                error: function(xhr, status, error) {
+                    console.error(`가이드 목록 로드 오류: ${xhr.status} - ${xhr.responseText}`);
+                    $('#guideContainer').html(`<p>가이드 목록을 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.</p>`);
+                }
+            });
+        }
+
+        // 스크롤 시 추가 로드
+        function handleScroll() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
+                loadGuides();
+            }
+        }
+
+        $(window).on('scroll', handleScroll);
+        loadGuides();  // 초기 로드
+
+        // 가이드 추가 모달 제어
+        $('#openGuideModal').on('click', function(e) {
+            e.preventDefault();
+            $('#guideModal').show();
+        });
+
+        $('#closeGuideModal').on('click', function() {
+            $('#guideModal').hide();
+            $('#addGuideForm')[0].reset();
+        });
+
+        // 가이드 추가 AJAX
+        $('#addGuideForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const guideData = {
+                title: $('#title').val(),
+                youtubeUrl: $('#youtubeUrl').val(),
+                description: $('#description').val()
+            };
+
+            $.ajax({
+                url: '/guide/add',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(guideData),
+                success: function(response) {
+                    if (response) {
+                        alert('가이드가 성공적으로 추가되었습니다.');
+                        $('#guideModal').hide();
+                        $('#guideContainer').empty();
+                        page = 1; // 새로 로드
+                        loadGuides();
+                    } else {
+                        alert('가이드 추가에 실패했습니다.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("가이드 추가 실패: " + error);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
