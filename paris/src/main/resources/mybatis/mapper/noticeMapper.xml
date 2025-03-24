@@ -32,13 +32,13 @@
 
     <!-- 공지 리스트 -->
     <select id="getNoticeList" parameterType="Map" resultMap="NoticeMap">
-        SELECT N.NOTICE_NO, N.USER_NO, N.TITLE, N.CONTENTS, N.HIT, N.CREATED_AT,
-               U.ID, U.PW, U.NAME, U.GENDER, U.EMAIL, U.HP, U.HP_SMS_YN, U.JOINED_AT
-          FROM NOTICE_T N
-               LEFT JOIN USER_T U
-               ON N.USER_NO = U.USER_NO
-         WHERE N.NOTICE_NO BETWEEN #{begin} AND #{end}
-         ORDER BY N.NOTICE_NO DESC
+        SELECT NOTICE_NO, USER_NO, TITLE, CONTENTS, HIT, CREATED_AT, ID, PW, NAME, GENDER, EMAIL, HP, HP_SMS_YN, JOINED_AT
+          FROM (SELECT N.NOTICE_NO, N.USER_NO, N.TITLE, N.CONTENTS, N.HIT, N.CREATED_AT,
+                       U.ID, U.PW, U.NAME, U.GENDER, U.EMAIL, U.HP, U.HP_SMS_YN, U.JOINED_AT,
+                       ROW_NUMBER() OVER (ORDER BY N.NOTICE_NO DESC) AS RN
+                  FROM NOTICE_T N LEFT JOIN USER_T U
+                       ON N.USER_NO = U.USER_NO)
+         WHERE RN BETWEEN #{begin} AND #{end}
     </select>
 
     <!-- 공지 상세 -->

@@ -38,8 +38,8 @@ public class NoticeServiceImpl implements NoticeService {
     private final PbFileUtils pbFileUtils;
 
 
-    @Transactional(readOnly = true)
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> getNoticeList(HttpServletRequest request) {
 
         Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
@@ -49,13 +49,13 @@ public class NoticeServiceImpl implements NoticeService {
 
         pbPageUtils.setPaging(page, total, display);
 
-        Map<String, Object> map = Map.of("begin", pbPageUtils.getBegin()
-                                         , "end", pbPageUtils.getEnd());
+        Map<String, Object> map = Map.of("begin", pbPageUtils.getBegin(),
+                                         "end", pbPageUtils.getEnd());
 
         List<NoticeDto> noticeList = noticeMapper.getNoticeList(map);
 
-        return Map.of("noticeList", noticeList
-                    , "totalPage", pbPageUtils.getTotalPage());
+        return Map.of("noticeList", noticeList,
+                      "totalPage", pbPageUtils.getTotalPage());
     }
 
     @Override
