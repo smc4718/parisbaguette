@@ -46,9 +46,11 @@
 
     <!-- Main -->
     <div id="main">
-        <h2>사용자 예약 목록</h2>
-        <nav>
-            <h3><a href="#" id="openAdminModal">휴일 관리</a></h3>
+        <nav style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>사용자 예약 목록</h2>
+            <h3 th:if="${session.user != null and session.user.userNo == 1}">
+                <a href="#" id="openAdminModal" style="font-size: 30px;">휴일 관리</a>
+            </h3>
         </nav>
 
         <div>

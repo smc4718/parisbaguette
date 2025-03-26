@@ -53,13 +53,14 @@
 
 	<!-- Main -->
 	<div id="main">
-		<!-- 공지사항 목록 -->
-		<h2>당일 근무자 필독!</h2>
 
 		<!-- 글쓰기 버튼 -->
-		<ul class="actions">
-			<li><a th:href="@{/notice/write.form}" class="button button-location">글쓰기</a></li>
-		</ul>
+		<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+			<h2>당일 근무자 필독!</h2>
+			<a th:href="@{/notice/write.form}" class="button" style="font-size: 18px;">글쓰기</a>
+		</div>
+
+		<!-- 공지사항 목록 -->
 		<table border="1">
 			<thead>
 				<tr>

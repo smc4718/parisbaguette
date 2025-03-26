@@ -93,12 +93,11 @@
 
     <!-- Main -->
     <div id="main">
-        <h2>신입 가이드</h2>
-
-        <!-- 가이드 추가 버튼 -->
-        <ul class="actions">
-            <li><a href="#" id="openGuideModal" class="button button-location">가이드 추가</a></li>
-        </ul>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>신입 가이드</h2>
+            <a href="#" id="openGuideModal" class="button"
+               th:if="${session.user != null and session.user.userNo == 1}">가이드 추가</a>
+        </div>
 
         <!-- 가이드 추가 모달 -->
         <div id="guideModal" style="display: none;">

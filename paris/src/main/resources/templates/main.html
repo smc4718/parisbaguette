@@ -36,6 +36,10 @@
 			<li><a th:href="@{/reservation/user}">휴일 예약</a></li>
 			<li><a th:href="@{/guide/guideHome}">신입 가이드</a></li>
 		</ul>
+		<span th:if="${session.user != null}">
+			<span th:text="${session.user.name} + '님'"></span>
+			<a th:href="@{/user/logout}">로그아웃</a>
+		</span>
 	</nav>
 
 	<!-- Main -->
