@@ -55,6 +55,9 @@ dependencies {
 
 	// 환경변수 불러오기
 	implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+
+	// json
+	implementation 'org.json:json:20240303'
 }
 
 tasks.named('test') {

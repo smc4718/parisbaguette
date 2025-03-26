@@ -7,40 +7,70 @@
     <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
     <title>파리바게뜨 망우겸재 커뮤니티</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            padding: 20px;
+<style>
+    #guideContainer {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 24px;
+        padding: 20px;
+    }
+
+    .guide-card {
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .guide-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .guide-card h3 {
+        font-size: 20px;
+        margin: 12px 0 8px;
+        color: #333;
+    }
+
+    .guide-card iframe {
+        width: 100%;
+        height: 202px; /* 16:9 비율 */
+        border-radius: 12px;
+        margin-bottom: 10px;
+    }
+
+    .guide-card p {
+        font-size: 14px;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+        .guide-card iframe {
+            height: 180px;
         }
-        #guideContainer {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .guide-card {
-            width: 320px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .guide-card h3 {
-            margin: 5px 0;
-            font-size: 18px;
-        }
-        .guide-card p {
-            font-size: 14px;
-            color: #666;
-        }
-    </style>
+    }
+</style>
 </head>
 
 <body class="is-preload">
 
 <!-- Wrapper -->
 <div id="wrapper" class="fade-in">
+
+    <!-- Intro -->
+    <div id="intro">
+        <h1>파리바게뜨 망우겸재</h1>
+        <p>망우겸재와 함께하는 행복한 하루 되세요~
+            <a href="https://map.naver.com/p/entry/place/19501449?lng=127.0976717&lat=37.5906108&placePath=%2Fhome&entry=plt&searchType=place&c=15.00,0,0,0,dh">
+                <br>망우겸재점에 대해...</a>
+        </p>
+        <ul class="actions">
+            <li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
+        </ul>
+    </div>
 
     <!-- Header -->
     <header id="header">
@@ -74,14 +104,16 @@
         <div id="guideModal" style="display: none;">
             <h3>신입 가이드 추가</h3>
             <form id="addGuideForm">
-                <label for="title">제목:</label>
-                <input type="text" id="title" name="title" required>
-
                 <label for="youtubeUrl">유튜브 URL:</label>
-                <input type="text" id="youtubeUrl" name="youtubeUrl" required>
+                <input type="text" id="youtubeUrl" name="youtubeUrl" required placeholder="https://youtu.be/abc123">
 
-                <label for="description">설명:</label>
-                <textarea id="description" name="description" required></textarea>
+                <!-- 안내 문구 추가 -->
+                <small style="color: gray;">
+                    유튜브 영상 주소만 입력하면 제목과 설명은 자동으로 등록됩니다.
+                </small>
+
+                <input type="hidden" id="title" name="title">
+                <input type="hidden" id="description" name="description">
 
                 <button type="submit">추가하기</button>
                 <button type="button" id="closeGuideModal">취소</button>
@@ -89,10 +121,18 @@
         </div>
 
         <div id="guideContainer">
-            <p id="noGuideMessage" style="display: none;">현재 등록된 가이드가 없습니다.</p>
+            <p id="noGuideMessage" style="display: none;"></p>
         </div>
     </div>
 
+</div>
+
+<!-- Copyright -->
+<div id="copyright">
+    <ul>
+        <li>&copy; PYJ</li>
+        <li><a th:href="@{/main}">Park family</a></li>
+    </ul>
 </div>
 
 <!-- Scripts -->
@@ -105,20 +145,23 @@
 <script th:src="@{/assets/js/main.js}"></script>
 
 <script>
-    $(document).ready(function() {
+    // 유튜브 URL 유효성 검사 함수 추가!
+    function isValidYoutubeUrl(url) {
+        const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/(watch\?v=|shorts\/)|youtu\.be\/)[\w-]{11}/;
+        return pattern.test(url);
+    }
+
+    $(document).ready(function () {
         let page = 1;
         const size = 10;
 
-        // 가이드 목록 로드
         function loadGuides() {
             $.ajax({
                 url: `/guide/list?page=${page}&size=${size}`,
                 method: 'GET',
-                success: function(guides) {
-                    console.log("가이드 목록 데이터:", guides);
-
+                success: function (guides) {
                     if (guides.length === 0) {
-                        $('#noGuideMessage').show();  // 안내 메시지 표시
+                        $('#noGuideMessage').show();
                         $(window).off('scroll');
                         return;
                     }
@@ -126,11 +169,9 @@
                     guides.forEach(guide => {
                         $('#guideContainer').append(`
                             <div class="guide-card">
+                                <iframe src="${guide.youtubeUrl}"
+                                        frameborder="0" allowfullscreen></iframe>
                                 <h3>${guide.title}</h3>
-                                <iframe width="320" height="180"
-                                        src="${guide.youtubeUrl}"
-                                        frameborder="0" allowfullscreen>
-                                </iframe>
                                 <p>${guide.description}</p>
                             </div>
                         `);
@@ -138,14 +179,13 @@
 
                     page++;
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error(`가이드 목록 로드 오류: ${xhr.status} - ${xhr.responseText}`);
                     $('#guideContainer').html(`<p>가이드 목록을 불러오는 중 문제가 발생했습니다. 다시 시도해 주세요.</p>`);
                 }
             });
         }
 
-        // 스크롤 시 추가 로드
         function handleScroll() {
             if ($(window).scrollTop() + $(window).height() >= $(document).height()) {
                 loadGuides();
@@ -153,46 +193,49 @@
         }
 
         $(window).on('scroll', handleScroll);
-        loadGuides();  // 초기 로드
+        loadGuides();
 
-        // 가이드 추가 모달 제어
-        $('#openGuideModal').on('click', function(e) {
+        $('#openGuideModal').on('click', function (e) {
             e.preventDefault();
             $('#guideModal').show();
         });
 
-        $('#closeGuideModal').on('click', function() {
+        $('#closeGuideModal').on('click', function () {
             $('#guideModal').hide();
             $('#addGuideForm')[0].reset();
         });
 
-        // 가이드 추가 AJAX
-        $('#addGuideForm').on('submit', function(e) {
+        $('#addGuideForm').on('submit', function (e) {
             e.preventDefault();
 
-            const guideData = {
-                title: $('#title').val(),
-                youtubeUrl: $('#youtubeUrl').val(),
-                description: $('#description').val()
-            };
+            const youtubeUrl = $('#youtubeUrl').val();
+
+            // ✅ 유효성 검사 실행!
+            if (!isValidYoutubeUrl(youtubeUrl)) {
+                alert("유효한 유튜브 URL 형식이 아닙니다.\n예: https://youtu.be/abc123 또는 https://youtube.com/watch?v=abc123");
+                return;
+            }
+
+            const guideData = { youtubeUrl };
 
             $.ajax({
                 url: '/guide/add',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(guideData),
-                success: function(response) {
+                success: function (response) {
                     if (response) {
                         alert('가이드가 성공적으로 추가되었습니다.');
                         $('#guideModal').hide();
+                        $('#addGuideForm')[0].reset();
                         $('#guideContainer').empty();
-                        page = 1; // 새로 로드
+                        page = 1;
                         loadGuides();
                     } else {
                         alert('가이드 추가에 실패했습니다.');
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error("가이드 추가 실패: " + error);
                 }
             });
