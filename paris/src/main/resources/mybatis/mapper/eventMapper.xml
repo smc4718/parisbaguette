@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.pyj.paris.dao.EventMapper">
+
+    <!-- 결과 매핑 -->
+    <resultMap id="eventResultMap" type="EventDto">
+        <id     property="eventNo"     column="EVENT_NO"/>
+        <result property="title"       column="TITLE"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="startDate"   column="START_DATE"/>
+        <result property="endDate"     column="END_DATE"/>
+        <result property="createdAt"   column="CREATED_AT"/>
+
+        <collection property="images" ofType="EventImageDto">
+            <id     property="eventImageNo"    column="EVENT_IMAGE_NO"/>
+            <result property="eventNo"         column="EVENT_NO"/>
+            <result property="imagePath"       column="IMAGE_PATH"/>
+            <result property="filesystemName"  column="FILESYSTEM_NAME"/>
+        </collection>
+    </resultMap>
+
+    <insert id="insertEvent" parameterType="EventDto">
+        <selectKey keyProperty="eventNo" resultType="int" order="BEFORE">
+            SELECT EVENT_SEQ.NEXTVAL
+              FROM DUAL
+        </selectKey>
+        INSERT INTO EVENT_T (
+            EVENT_NO
+          , TITLE
+          , DESCRIPTION
+          , START_DATE
+          , END_DATE
+          , CREATED_AT
+        ) VALUES (
+            #{eventNo}
+          , #{title}
+          , #{description}
+          , TO_DATE(#{startDate}, 'YYYY-MM-DD')
+          , TO_DATE(#{endDate}, 'YYYY-MM-DD')
+          , SYSDATE
+        )
+    </insert>
+
+    <insert id="insertEventImage" parameterType="EventImageDto">
+        <selectKey order="BEFORE" keyProperty="eventImageNo" resultType="int">
+            SELECT EVENT_IMAGE_SEQ.NEXTVAL
+              FROM DUAL
+        </selectKey>
+        INSERT INTO EVENT_IMAGE_T (
+            EVENT_IMAGE_NO
+          , EVENT_NO
+          , IMAGE_PATH
+          , FILESYSTEM_NAME
+        ) VALUES (
+            #{eventImageNo}
+          , #{eventNo}
+          , #{imagePath}
+          , #{filesystemName}
+        )
+    </insert>
+
+    <!-- 이벤트 목록 -->
+    <select id="selectEventList" resultMap="eventResultMap">
+        SELECT E.EVENT_NO, E.TITLE, E.DESCRIPTION,
+               TO_CHAR(E.START_DATE, 'YYYY-MM-DD') AS START_DATE,
+               TO_CHAR(E.END_DATE, 'YYYY-MM-DD') AS END_DATE,
+               TO_CHAR(E.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT,
+               I.EVENT_IMAGE_NO, I.IMAGE_PATH, I.FILESYSTEM_NAME
+          FROM EVENT_T E LEFT JOIN EVENT_IMAGE_T I
+               ON E.EVENT_NO = I.EVENT_NO
+         ORDER BY E.EVENT_NO DESC
+    </select>
+
+    <!-- 단건 조회 -->
+    <select id="selectEventByNo" resultMap="eventResultMap">
+        SELECT E.EVENT_NO, E.TITLE, E.DESCRIPTION,
+               TO_CHAR(E.START_DATE, 'YYYY-MM-DD') AS START_DATE,
+               TO_CHAR(E.END_DATE, 'YYYY-MM-DD') AS END_DATE,
+               TO_CHAR(E.CREATED_AT, 'YYYY-MM-DD') AS CREATED_AT,
+               I.EVENT_IMAGE_NO, I.IMAGE_PATH, I.FILESYSTEM_NAME
+          FROM EVENT_T E LEFT JOIN EVENT_IMAGE_T I
+               ON E.EVENT_NO = I.EVENT_NO
+         WHERE E.EVENT_NO = #{eventNo}
+    </select>
+
+</mapper>

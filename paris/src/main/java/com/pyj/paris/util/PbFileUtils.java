@@ -1,7 +1,10 @@
 package com.pyj.paris.util;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
@@ -21,6 +24,33 @@ public class PbFileUtils {
     public String getUploadPath() {
         LocalDate today = LocalDate.now();
         return "/paris/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    }
+
+    // 이벤트 이미지가 저장될 경로 반환
+    public String getEventImagePath() {
+        LocalDate today = LocalDate.now();
+        String os = System.getProperty("os.name").toLowerCase();
+        String baseDir = os.contains("win") ? "D:/paris/event/" : "/paris/event/";
+        return baseDir + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    }
+
+    public String save(String path, MultipartFile multipartFile) {
+        File dir = new File(path);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String filesystemName = getFilesystemName(multipartFile.getOriginalFilename());
+
+        File file = new File(dir, filesystemName);
+        try {
+            multipartFile.transferTo(file);
+            System.out.println("[파일 저장 성공] " + file.getAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException("파일 저장 실패: " + file.getAbsolutePath(), e);
+        }
+
+        return filesystemName;
     }
 
     // 임시 파일이 저장될 경로 반환하기 (zip 파일)

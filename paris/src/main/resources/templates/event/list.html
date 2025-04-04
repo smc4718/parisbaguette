@@ -2,35 +2,150 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>이벤트 목록</title>
 	<link rel="stylesheet" th:href="@{/assets/css/main.css}" />
 	<noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
-	<title>파리바게뜨 망우겸재 커뮤니티</title>
+	<style>
+		.post { position: relative; }
+		article.ended { filter: grayscale(100%); position: relative; }
+
+		.active-label {
+			position: absolute;
+			top: 10px; left: 10px;
+			background-color: #17a2b8;
+			color: white;
+			font-size: 0.9rem;
+			padding: 6px 12px;
+			border-radius: 5px;
+			font-weight: 700;
+			z-index: 10;
+		}
+
+		.ended-label {
+			position: absolute;
+			top: 10px; left: 10px;
+			background-color: #6c757d;
+			color: white;
+			font-size: 0.85rem;
+			padding: 6px 12px;
+			border-radius: 6px;
+			font-weight: 700;
+			z-index: 10;
+		}
+
+		.dday-text {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #2c3e50;
+			margin-bottom: 0.5rem;
+			padding: 4px 12px;
+			background-color: #f1f1f1;
+			border-radius: 12px;
+			display: inline-block;
+		}
+
+		.dday-text.deadline {
+			background-color: #e0e0e0;
+			color: #333;
+		}
+
+		.post h2 { margin-top: 0.5rem; }
+		.image img { width: 100%; height: auto; object-fit: cover; }
+
+		.modal {
+			display: none;
+			position: fixed;
+			top: 50%; left: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 9999;
+			background: #fff;
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0,0,0,0.3);
+			width: 90%;
+			max-width: 500px;
+		}
+
+		.modal input[type="text"],
+		.modal input[type="file"],
+		.modal input[type="date"],
+		.modal textarea {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 1rem;
+		}
+
+		.modal button {
+			width: 100%;
+			padding: 12px;
+			font-size: 1rem;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			cursor: pointer;
+			background-color: #f5f5f5;
+			color: #333;
+			font-weight: 500;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background-color 0.2s ease;
+			margin-bottom: 10px;
+		}
+
+		.modal button:hover {
+			background-color: #e0e0e0;
+		}
+
+		.detail-modal {
+			text-align: left;
+		}
+
+		.detail-heading {
+			margin-bottom: 20px;
+			font-size: 1.5rem;
+			text-align: center;
+			color: #333;
+		}
+
+		.detail-section {
+			margin-bottom: 20px;
+		}
+
+		.detail-section strong {
+			display: block;
+			margin-bottom: 6px;
+			font-weight: bold;
+			color: #555;
+			font-size: 0.95rem;
+		}
+
+		.detail-section p {
+			margin: 0;
+			font-size: 1rem;
+			color: #222;
+			line-height: 1.5;
+		}
+
+		.detail-image {
+			width: 100%;
+			max-height: 280px;
+			object-fit: cover;
+			border-radius: 8px;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+		}
+	</style>
 </head>
-
 <body class="is-preload">
-
-<!-- Wrapper -->
 <div id="wrapper" class="fade-in">
 
-	<!-- Intro -->
-	<div id="intro">
-		<h1>파리바게뜨 망우겸재</h1>
-		<p>망우겸재와 함께하는 행복한 하루 되세요~
-			<a href="https://map.naver.com/p/entry/place/19501449?lng=127.0976717&lat=37.5906108&placePath=%2Fhome&entry=plt&searchType=place&c=15.00,0,0,0,dh">
-				<br>망우겸재점에 대해...</a>
-		</p>
-		<ul class="actions">
-			<li><a href="#header" class="button icon solid solo fa-arrow-down scrolly">Continue</a></li>
-		</ul>
-	</div>
-
-	<!-- Header -->
 	<header id="header">
 		<a th:href="@{/main}" class="logo">Paris Baguette</a>
 	</header>
 
-	<!-- Nav -->
 	<nav id="nav">
 		<ul class="links">
 			<li><a th:href="@{/notice/list}">오늘의 공지</a></li>
@@ -38,181 +153,186 @@
 			<li><a th:href="@{/reservation/user}">휴일 예약</a></li>
 			<li><a th:href="@{/guide/guideHome}">신입 가이드</a></li>
 		</ul>
-		<span th:if="${session.user != null}">
-            <span th:text="${session.user.name} + '님'"></span>
-            <a th:href="@{/user/logout}">로그아웃</a>
-        </span>
 	</nav>
 
-	<!-- Main -->
 	<div id="main">
+		<div style="text-align: right; margin-bottom: 20px;">
+			<button onclick="openCreateModal()" class="button primary">이벤트 등록</button>
+		</div>
 
-		<!-- Featured Post -->
-		<article class="post featured">
+		<article id="featured-event" class="post featured" style="display: none;">
 			<header class="major">
-				<span class="date">April 25, 2017</span>
-				<h2><a href="#">And this is a<br />
-					massive headline</a></h2>
-				<p>Aenean ornare velit lacus varius enim ullamcorper proin aliquam<br />
-					facilisis ante sed etiam magna interdum congue. Lorem ipsum dolor<br />
-					amet nullam sed etiam veroeros.</p>
+				<span class="dday-text" id="featured-date"></span>
+				<h2 id="featured-title"></h2>
 			</header>
-			<a href="#" class="image main"><img src="/static/images/pic01.jpg" alt="" /></a>
+			<a href="#" class="image main" id="featured-img-link">
+				<img id="featured-img" src="" alt="대표 이벤트 이미지" />
+			</a>
 			<ul class="actions special">
-				<li><a href="#" class="button large">Full Story</a></li>
+				<li><a href="#" class="button large" id="featured-detail-btn">자세히 보기</a></li>
 			</ul>
 		</article>
 
-		<!-- Posts -- 얘네는 나중에 리스트로 돌리면 될듯 -->
-		<section class="posts">
-			<article>
-				<header>
-					<span class="date">April 24, 2017</span>
-					<h2><a href="#">Sed magna<br />
-						ipsum faucibus</a></h2>
-				</header>
-				<a href="#" class="image fit"><img src="/static/images/pic02.jpg" alt="" /></a>
-				<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Full Story</a></li>
-				</ul>
-			</article>
-			<article>
-				<header>
-					<span class="date">April 22, 2017</span>
-					<h2><a href="#">Primis eget<br />
-						imperdiet lorem</a></h2>
-				</header>
-				<a href="#" class="image fit"><img src="/static/images/pic03.jpg" alt="" /></a>
-				<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Full Story</a></li>
-				</ul>
-			</article>
-			<article>
-				<header>
-					<span class="date">April 18, 2017</span>
-					<h2><a href="#">Ante mattis<br />
-						interdum dolor</a></h2>
-				</header>
-				<a href="#" class="image fit"><img src="/static/images/pic04.jpg" alt="" /></a>
-				<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Full Story</a></li>
-				</ul>
-			</article>
-			<article>
-				<header>
-					<span class="date">April 14, 2017</span>
-					<h2><a href="#">Tempus sed<br />
-						nulla imperdiet</a></h2>
-				</header>
-				<a href="#" class="image fit"><img src="/static/images/pic05.jpg" alt="" /></a>
-				<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Full Story</a></li>
-				</ul>
-			</article>
-			<article>
-				<header>
-					<span class="date">April 11, 2017</span>
-					<h2><a href="#">Odio magna<br />
-						sed consectetur</a></h2>
-				</header>
-				<a href="#" class="image fit"><img src="/static/images/pic06.jpg" alt="" /></a>
-				<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Full Story</a></li>
-				</ul>
-			</article>
-			<article>
-				<header>
-					<span class="date">April 7, 2017</span>
-					<h2><a href="#">Augue lorem<br />
-						primis vestibulum</a></h2>
-				</header>
-				<a href="#" class="image fit"><img src="/static/images/pic07.jpg" alt="" /></a>
-				<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis magna etiam.</p>
-				<ul class="actions special">
-					<li><a href="#" class="button">Full Story</a></li>
-				</ul>
-			</article>
-		</section>
-
-		<!-- Footer -->
-		<footer>
-			<div class="pagination">
-				<!--<a href="#" class="previous">Prev</a>-->
-				<a href="#" class="page active">1</a>
-				<a href="#" class="page">2</a>
-				<a href="#" class="page">3</a>
-				<span class="extra">&hellip;</span>
-				<a href="#" class="page">8</a>
-				<a href="#" class="page">9</a>
-				<a href="#" class="page">10</a>
-				<a href="#" class="next">Next</a>
-			</div>
-		</footer>
-
+		<section class="posts" id="eventList"></section>
 	</div>
 
-	<!-- Footer -->
+	<!-- 등록 모달 -->
+	<div id="createModal" class="modal">
+		<h3>이벤트 등록</h3>
+		<input type="text" id="eventTitle" placeholder="제목">
+		<input type="file" id="eventImage">
+		<textarea id="eventDesc" placeholder="이벤트 설명"></textarea>
+		<label>시작일</label><input type="date" id="startDate">
+		<label>종료일</label><input type="date" id="endDate">
+		<button onclick="submitEvent()">이벤트 게시</button>
+		<button onclick="closeCreateModal()">닫기</button>
+	</div>
+
+	<!-- 상세 모달 -->
+	<div id="detailModal" class="modal detail-modal">
+		<h2 class="detail-heading">이벤트 상세정보</h2>
+		<div class="detail-section">
+			<strong>제목</strong>
+			<p id="detailTitle"></p>
+		</div>
+		<div class="detail-section">
+			<strong>이벤트</strong>
+			<img id="detailImage" src="" alt="이벤트 이미지" class="detail-image" />
+		</div>
+		<div class="detail-section">
+			<strong>설명</strong>
+			<p id="detailDesc"></p>
+		</div>
+		<div class="detail-section">
+			<strong>이벤트 기간</strong>
+			<p id="detailDate"></p>
+		</div>
+		<button onclick="closeDetailModal()">닫기</button>
+	</div>
+
 	<footer id="footer">
-		<section>
-			<form method="post" action="#">
-				<div class="fields">
-					<div class="field">
-						<label for="name">Name</label>
-						<input type="text" name="name" id="name" />
-					</div>
-					<div class="field">
-						<label for="email">Email</label>
-						<input type="text" name="email" id="email" />
-					</div>
-					<div class="field">
-						<label for="message">Message</label>
-						<textarea name="message" id="message" rows="3"></textarea>
-					</div>
-				</div>
-				<ul class="actions">
-					<li><input type="submit" value="Send Message" /></li>
-				</ul>
-			</form>
-		</section>
-		<section class="split contact">
-			<section class="alt">
-				<h3>Address</h3>
-				<p>1234 Somewhere Road #87257<br />
-					Nashville, TN 00000-0000</p>
-			</section>
-			<section>
-				<h3>Phone</h3>
-				<p><a href="#">(000) 000-0000</a></p>
-			</section>
-			<section>
-				<h3>Email</h3>
-				<p><a href="#">info@untitled.tld</a></p>
-			</section>
+		<p>&copy; 파리바게뜨 망우겸재</p>
 	</footer>
-
-	<!-- Copyright -->
-	<div id="copyright">
-		<ul>
-			<li>&copy; PYJ</li>
-			<li><a th:href="@{/main}">Park family</a></li>
-		</ul>
-	</div>
-
 </div>
 
 <!-- Scripts -->
 <script th:src="@{/assets/js/jquery.min.js}"></script>
-<script th:src="@{/assets/js/jquery.scrollex.min.js}"></script>
-<script th:src="@{/assets/js/jquery.scrolly.min.js}"></script>
 <script th:src="@{/assets/js/browser.min.js}"></script>
 <script th:src="@{/assets/js/breakpoints.min.js}"></script>
 <script th:src="@{/assets/js/util.js}"></script>
 <script th:src="@{/assets/js/main.js}"></script>
 
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		fetch('/event')
+				.then(res => res.json())
+				.then(events => {
+					if (events.length > 0) {
+						renderFeatured(events[0]);
+						for (let i = 1; i < events.length; i++) {
+							renderEvent(events[i]);
+						}
+					}
+				});
+
+		function renderFeatured(event) {
+			const featured = document.getElementById("featured-event");
+			featured.style.display = "block";
+			const now = new Date().setHours(0, 0, 0, 0);
+			const end = new Date(event.endDate).setHours(0, 0, 0, 0);
+			const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+			const ddayText = daysLeft < 0 ? '마감' : `D-${daysLeft}`;
+			const ddayClass = daysLeft < 0 ? 'dday-text deadline' : 'dday-text';
+			document.getElementById("featured-date").textContent = ddayText;
+			document.getElementById("featured-date").className = ddayClass;
+			document.getElementById("featured-title").textContent = event.title;
+			document.getElementById("featured-img").src = `${event.images?.[0]?.imagePath}/${event.images?.[0]?.filesystemName}`;
+			document.getElementById("featured-detail-btn").onclick = () => window.openModal(event.eventNo);
+		}
+
+		function renderEvent(event) {
+			const now = new Date().setHours(0, 0, 0, 0);
+			const end = new Date(event.endDate).setHours(0, 0, 0, 0);
+			const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+
+			let ddayHtml = '';
+			const label = `<div class="${daysLeft < 0 ? 'ended-label' : 'active-label'}">${daysLeft < 0 ? '종료' : '진행중'}</div>`;
+
+			if (daysLeft >= 0) {
+				const ddayClass = 'dday-text';
+				ddayHtml = `<div class="${ddayClass}">D-${daysLeft}</div>`;
+			}
+
+			let imageHtml = '';
+			if (event.images?.length) {
+				const img = event.images[0];
+				imageHtml = `<a href="#" class="image fit"><img src="${img.imagePath}/${img.filesystemName}" alt="" /></a>`;
+			}
+
+			const article = document.createElement("article");
+			article.classList.add("post");
+			if (daysLeft < 0) article.classList.add("ended");
+
+			article.innerHTML = `
+				${label}
+				<header>
+					${ddayHtml}
+					<h2><a href="#">${event.title}</a></h2>
+				</header>
+				${imageHtml}
+				<ul class="actions special">
+					<li><a href="#" class="button" onclick="window.openModal(${event.eventNo})">자세히 보기</a></li>
+				</ul>
+			`;
+
+			document.getElementById("eventList").appendChild(article);
+		}
+
+		window.openCreateModal = () => document.getElementById("createModal").style.display = "block";
+		window.closeCreateModal = () => document.getElementById("createModal").style.display = "none";
+
+		window.openModal = function (eventNo) {
+			fetch(`/event/${eventNo}`)
+					.then(res => res.json())
+					.then(event => {
+						document.getElementById("detailTitle").textContent = event.title;
+						document.getElementById("detailImage").src = `${event.images?.[0]?.imagePath}/${event.images?.[0]?.filesystemName}`;
+						document.getElementById("detailDesc").innerHTML = event.description.replace(/\n/g, "<br>");
+						document.getElementById("detailDate").textContent = formatDate(event.startDate) + " ~ " + formatDate(event.endDate);
+						document.getElementById("detailModal").style.display = "block";
+					});
+		};
+
+		window.closeDetailModal = () => document.getElementById("detailModal").style.display = "none";
+
+		window.submitEvent = function () {
+			const formData = new FormData();
+			formData.append("title", document.getElementById("eventTitle").value);
+			formData.append("description", document.getElementById("eventDesc").value);
+			formData.append("startDate", document.getElementById("startDate").value);
+			formData.append("endDate", document.getElementById("endDate").value);
+			formData.append("image", document.getElementById("eventImage").files[0]);
+
+			fetch('/event/upload', {
+				method: 'POST',
+				body: formData
+			}).then(res => {
+				if (res.ok) {
+					alert('이벤트 등록 완료');
+					window.closeCreateModal();
+					location.reload();
+				} else {
+					alert('등록 실패');
+				}
+			});
+		};
+
+		function formatDate(dateStr) {
+			if (!dateStr) return '';
+			const date = new Date(dateStr);
+			return isNaN(date) ? '' : date.toISOString().split('T')[0];
+		}
+	});
+</script>
 </body>
 </html>
