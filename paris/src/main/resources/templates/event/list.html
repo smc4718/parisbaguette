@@ -8,31 +8,22 @@
 	<noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}" /></noscript>
 	<style>
 		.post { position: relative; }
-		article.ended { filter: grayscale(100%); position: relative; }
+		article.ended { filter: grayscale(100%); }
 
-		.active-label {
+		.active-label,
+		.ended-label {
 			position: absolute;
-			top: 10px; left: 10px;
-			background-color: #17a2b8;
-			color: white;
-			font-size: 0.9rem;
+			top: 53px;
 			padding: 6px 12px;
 			border-radius: 5px;
 			font-weight: 700;
+			font-size: 0.9rem;
 			z-index: 10;
+			color: white;
 		}
 
-		.ended-label {
-			position: absolute;
-			top: 10px; left: 10px;
-			background-color: #6c757d;
-			color: white;
-			font-size: 0.85rem;
-			padding: 6px 12px;
-			border-radius: 6px;
-			font-weight: 700;
-			z-index: 10;
-		}
+		.active-label { background-color: #17a2b8; }
+		.ended-label { background-color: #6c757d; }
 
 		.dday-text {
 			font-size: 1rem;
@@ -50,13 +41,67 @@
 			color: #333;
 		}
 
-		.post h2 { margin-top: 0.5rem; }
-		.image img { width: 100%; height: auto; object-fit: cover; }
+		article.post,
+		article.featured {
+			padding: 0 !important;
+			margin: 0 !important;
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+		.image {
+			display: block;
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			border-radius: 0;
+		}
+
+		.image img {
+			width: 100%;
+			height: auto;
+			display: block;
+			margin: 0;
+			padding: 0;
+			object-fit: cover;
+		}
+
+		ul.actions.special {
+			margin-top: auto;
+			padding: 10px 0 20px;
+			text-align: center;
+		}
+
+		ul.actions.special li a.button {
+			font-size: 0.8rem;
+			padding: 6px 12px;
+			border-radius: 4px;
+			border: 1px solid #999;
+			background: transparent;
+			color: #333;
+			font-weight: 600;
+			transition: all 0.2s ease;
+		}
+
+		ul.actions.special li a.button:hover {
+			background-color: #f0f0f0;
+			color: #111;
+		}
+
+		/* 대표 이벤트 이미지도 동일한 스타일 적용 */
+		#featured-event .image.main {
+			margin-top: 0;
+		}
 
 		.modal {
 			display: none;
 			position: fixed;
-			top: 50%; left: 50%;
+			top: 50%;
+			left: 50%;
 			transform: translate(-50%, -50%);
 			z-index: 9999;
 			background: #fff;
@@ -160,16 +205,20 @@
 			<button onclick="openCreateModal()" class="button primary">이벤트 등록</button>
 		</div>
 
+		<!-- 대표 이벤트 -->
 		<article id="featured-event" class="post featured" style="display: none;">
-			<header class="major">
+			<div class="image main">
+				<img id="featured-img" src="" alt="대표 이벤트 이미지" />
+			</div>
+			<div style="position: absolute; top: 53px; left: 10px;">
+				<div id="featured-status" class="active-label" style="display: inline-block;">진행중</div>
+			</div>
+			<header style="padding: 20px;">
 				<span class="dday-text" id="featured-date"></span>
 				<h2 id="featured-title"></h2>
 			</header>
-			<a href="#" class="image main" id="featured-img-link">
-				<img id="featured-img" src="" alt="대표 이벤트 이미지" />
-			</a>
 			<ul class="actions special">
-				<li><a href="#" class="button large" id="featured-detail-btn">자세히 보기</a></li>
+				<li><a href="#" class="button" id="featured-detail-btn">이벤트 내용</a></li>
 			</ul>
 		</article>
 
@@ -238,15 +287,25 @@
 		function renderFeatured(event) {
 			const featured = document.getElementById("featured-event");
 			featured.style.display = "block";
+
 			const now = new Date().setHours(0, 0, 0, 0);
 			const end = new Date(event.endDate).setHours(0, 0, 0, 0);
 			const daysLeft = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+
 			const ddayText = daysLeft < 0 ? '마감' : `D-${daysLeft}`;
 			const ddayClass = daysLeft < 0 ? 'dday-text deadline' : 'dday-text';
+			const statusClass = daysLeft < 0 ? 'ended-label' : 'active-label';
+			const statusText = daysLeft < 0 ? '종료' : '진행중';
+
 			document.getElementById("featured-date").textContent = ddayText;
 			document.getElementById("featured-date").className = ddayClass;
 			document.getElementById("featured-title").textContent = event.title;
 			document.getElementById("featured-img").src = `${event.images?.[0]?.imagePath}/${event.images?.[0]?.filesystemName}`;
+
+			const statusEl = document.getElementById("featured-status");
+			statusEl.className = statusClass;
+			statusEl.textContent = statusText;
+
 			document.getElementById("featured-detail-btn").onclick = () => window.openModal(event.eventNo);
 		}
 
@@ -259,8 +318,9 @@
 			const label = `<div class="${daysLeft < 0 ? 'ended-label' : 'active-label'}">${daysLeft < 0 ? '종료' : '진행중'}</div>`;
 
 			if (daysLeft >= 0) {
-				const ddayClass = 'dday-text';
-				ddayHtml = `<div class="${ddayClass}">D-${daysLeft}</div>`;
+				ddayHtml = `<div class="dday-text">D-${daysLeft}</div>`;
+			} else {
+				ddayHtml = `<div class="dday-text deadline">마감</div>`;
 			}
 
 			let imageHtml = '';
@@ -274,16 +334,16 @@
 			if (daysLeft < 0) article.classList.add("ended");
 
 			article.innerHTML = `
-				${label}
-				<header>
-					${ddayHtml}
-					<h2><a href="#">${event.title}</a></h2>
-				</header>
-				${imageHtml}
-				<ul class="actions special">
-					<li><a href="#" class="button" onclick="window.openModal(${event.eventNo})">자세히 보기</a></li>
-				</ul>
-			`;
+        ${label}
+        ${imageHtml}
+        <header style="padding: 20px;">
+          ${ddayHtml}
+          <h2><a href="#">${event.title}</a></h2>
+        </header>
+        <ul class="actions special">
+          <li><a href="#" class="button" onclick="window.openModal(${event.eventNo})">이벤트 내용</a></li>
+        </ul>
+      `;
 
 			document.getElementById("eventList").appendChild(article);
 		}
