@@ -20,7 +20,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @EnableTransactionManagement  // @Transactional 허용
 @EnableScheduling             // @Scheduled 허용
-@MapperScan(basePackages="com.pyj.paris.dao")  // @Mapper를 찾을 패키지
+@MapperScan(basePackages="com.pyj.paris.dao")
 @Configuration
 public class DBConfig {
 
