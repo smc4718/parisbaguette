@@ -1,15 +1,26 @@
 package com.pyj.paris.service;
 
 import com.pyj.paris.dto.ReservationDto;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface ReservationService {
-    void requestReservation(ReservationDto reservation); // 예약 요청
-    void approveReservation(int reservationId, String userPhoneNumber); // 예약 승인
-    void rejectReservation(int reservationId, String userPhoneNumber); // 예약 거절
-    List<ReservationDto> getPendingReservations(); // 대기 중인 예약 목록
-    List<ReservationDto> getUserReservations(int userNo); // 특정 사용자의 예약 목록
-    List<ReservationDto> getAllReservations(); // 모든 예약 내역
-    List<ReservationDto> getReservationsByMonth(int year, int month); // 특정 월 예약 목록
+    // 기존 로직
+    List<ReservationDto> getPendingReservations();
+    List<ReservationDto> getUserReservations(int userNo);
+    List<ReservationDto> getAllReservations();
+    List<ReservationDto> getReservationsByMonth(int year, int month);
+
+    // 컨트롤러 로직 처리용
+    String handleRequestReservation(Date reservationDate, HttpServletRequest request);
+    ResponseEntity<Map<String, String>> handleApproveReservation(int reservationNo, String phoneNumber);
+    ResponseEntity<Map<String, String>> handleRejectReservation(int reservationNo, String phoneNumber);
+    String handlePendingReservationPage(Model model);
+    String handleUserReservationPage(HttpServletRequest request, Model model);
+    Map<String, List<ReservationDto>> handleReservationsByMonth(int year, int month);
 }
