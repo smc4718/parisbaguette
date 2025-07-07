@@ -105,10 +105,10 @@
 
 | 구분 | 메서드 | URI | 설명 |
 | --- | --- | --- | --- |
-| 목록 조회 | `GET` | `/guide/list?page=1&size=10` | 영상 목록 페이징 |
+| 목록 조회 | `GET` | `/guide/list`      | 영상 목록 페이징 |
 | 상세 조회 | `GET` | `/guide/{guideNo}` | 상세 정보 |
 | 등록 | `POST` | `/guide/add` | YouTube ID 등록 |
-| 삭제 | `DELETE` | `/guide/delete/{guideNo}` | 가이드 삭제 | - 미구현
+| 삭제 | `DELETE` | `/guide/delete/{guideNo}` | 가이드 삭제(추후 구현) |
 
 **특징**
 
