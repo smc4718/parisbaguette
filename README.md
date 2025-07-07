@@ -28,7 +28,7 @@
 ### 🌐 Frontend
 
 - Thymeleaf
-- JavaScript (AJAX, 모달, 페이징, Infinite Scroll)
+- JavaScript (AJAX, 모달, 페이징, 무한스크롤)
 - CKEditor (공지 게시판)
 - HTML5 + CSS3 (반응형 커스터마이징)
 
