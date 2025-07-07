@@ -14,7 +14,6 @@
 
 - Java 17
 - Spring Boot `3.4.1`
-- Spring MVC
 - MyBatis
 - Oracle 11g
 - Gradle
