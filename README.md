@@ -151,7 +151,7 @@
 
 ## 📌 전체 특징
 
-- ✅ **도메인별 Controller / Service / Mapper / DTO 구조 분리**
-- ✅ **RESTful + Thymeleaf 하이브리드 구성**
-- ✅ **실시간 SMS 알림 / 이미지 업로드 / Infinite Scroll**
-- ✅ **YouTube API 활용한 실시간 영상 정보 등록**
+-  **도메인별 Controller / Service / Mapper / DTO 구조 분리**
+-  **RESTful + Thymeleaf 하이브리드 구성**
+-  **실시간 SMS 알림 / 이미지 업로드 / Infinite Scroll**
+-  **YouTube API 활용한 실시간 영상 정보 등록**
