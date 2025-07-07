@@ -49,7 +49,7 @@
 |---------------|--------|-------------------------------------|----------------------------------------|
 | 목록 페이지   | GET    | /notice/list                        | 공지사항 목록 (Thymeleaf 렌더링)        |
 | 목록 JSON     | GET    | /notice/getList.do                  | AJAX 공지 목록 (페이징 포함)            |
-| 상세 조회     | GET    | /notice/detail.do?noticeNo={id}     | 공지 상세보기                           |
+| 상세 조회     | GET    | /notice/detail.do                   | 공지 상세보기                           |
 | 작성 폼       | GET    | /notice/write.form                  | 공지 등록 폼                            |
 | 등록 처리     | POST   | /notice/addNotice.do                | 이미지 포함 공지 등록 처리              |
 | 수정 폼       | POST   | /notice/edit.form                   | 공지 수정 폼 페이지 반환                |
