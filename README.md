@@ -23,7 +23,7 @@
 - Oracle SQL
 - MyBatis Mapper XML
 - YouTube Data API
-- CoolSMS API (SMS 알림)
+- CoolSMS API
 
 ### 🌐 Frontend
 
