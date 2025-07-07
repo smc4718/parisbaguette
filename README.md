@@ -67,14 +67,15 @@
 
 ### 🗓 예약 시스템 (Reservation)
 
-| 구분 | 메서드 | URI | 설명 |
-| --- | --- | --- | --- |
-| 예약 신청 | `POST` | `/reservation/request` | 사용자 예약 요청 |
-| 내 예약 목록 | `GET` | `/reservation/user` | 개인 예약 목록 조회 |
-| 월별 예약 | `GET` | `/reservation/month` | 달력 기반 예약 조회 |
-| 대기 목록 | `GET` | `/reservation/pending` | 관리자 승인 대기 목록 |
-| 승인 처리 | `POST` | `/reservation/approve` | 관리자 승인 + SMS |
-| 거절 처리 | `POST` | `/reservation/reject` | 관리자 거절 + SMS |
+| 구분         | 메서드 | URI                    | 설명                                      |
+|--------------|--------|-------------------------|-------------------------------------------|
+| 예약 신청     | POST   | /reservation/request    | 사용자 예약 요청 처리                     |
+| 내 예약 목록  | GET    | /reservation/user       | 사용자 개인 예약 목록 페이지              |
+| 월별 예약 조회| GET    | /reservation/list       | 캘린더용 월별 예약 데이터(JSON) 조회      |
+| 대기 목록     | GET    | /reservation/pending    | 관리자 승인 대기 목록 페이지              |
+| 승인 처리     | POST   | /reservation/approve    | 관리자 예약 승인 처리 (SMS 발송 포함)     |
+| 거절 처리     | POST   | /reservation/reject     | 관리자 예약 거절 처리 (SMS 발송 포함)     |
+| 전체 목록     | GET    | /reservation/all        | 전체 예약 목록 조회 (JSON)                |
 
 **특징**
 
