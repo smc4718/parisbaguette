@@ -43,8 +43,8 @@
 
 ---
 
-<img width="1034" height="922" alt="공지 메인" src="https://github.com/user-attachments/assets/afbd2f91-4e01-4637-a4e4-55f15584b945" />
-<img width="1191" height="1190" alt="게시글 상세22" src="https://github.com/user-attachments/assets/842b6018-e488-45e1-8d61-27e83ad5a573" />
+<img width="320" height="320" alt="공지 메인" src="https://github.com/user-attachments/assets/afbd2f91-4e01-4637-a4e4-55f15584b945" />
+<img width="320" height="320" alt="게시글 상세22" src="https://github.com/user-attachments/assets/842b6018-e488-45e1-8d61-27e83ad5a573" />
 
 
 ### 📢 공지사항 (Notice)
