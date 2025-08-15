@@ -43,11 +43,11 @@
 
 ---
 
+### 📢 공지사항 (Notice)
+
 <img width="400" height="400" alt="공지 메인" src="https://github.com/user-attachments/assets/afbd2f91-4e01-4637-a4e4-55f15584b945" />
 <img width="400" height="400" alt="게시글 상세22" src="https://github.com/user-attachments/assets/842b6018-e488-45e1-8d61-27e83ad5a573" />
 
-
-### 📢 공지사항 (Notice)
 
 | 구분          | 메서드 | URI                                 | 설명                                   |
 |---------------|--------|-------------------------------------|----------------------------------------|
@@ -69,12 +69,12 @@
 
 ---
 
+### 🗓 휴가 예약 (Reservation)
+
 <img width="420" height="420" alt="휴가 예약 메인" src="https://github.com/user-attachments/assets/221867a5-a2cc-45e2-878f-c5dcfffc88ae" />
 <img width="420" height="420" alt="휴가 예약" src="https://github.com/user-attachments/assets/bd4b04c0-28b2-47b0-b373-10eac14e2dfc" />
 <img width="420" height="420" alt="휴가관리" src="https://github.com/user-attachments/assets/9d4095fc-552f-4415-b168-2498b952981a" />
 
-
-### 🗓 휴가 예약 (Reservation)
 
 | 구분         | 메서드 | URI                    | 설명                                      |
 |--------------|--------|-------------------------|-------------------------------------------|
@@ -94,12 +94,12 @@
 
 ---
 
+### 🎉 이벤트 (Event)
+
 <img width="420" height="420" alt="이벤트메인" src="https://github.com/user-attachments/assets/626fcb1a-c275-4cb8-86d3-4d2bd8397360" />
 <img width="420" height="420" alt="이벤트목록" src="https://github.com/user-attachments/assets/847e4fa4-4c05-4feb-810d-b4a4374397b8" />
 <img width="420" height="420" alt="이벤트 내용 상세보기" src="https://github.com/user-attachments/assets/1bee8794-fcf6-436a-b06e-707421c4e0e1" />
 
-
-### 🎉 이벤트 (Event)
 
 | 구분 | 메서드 | URI | 설명 |
 | --- | --- | --- | --- |
@@ -115,11 +115,11 @@
 
 ---
 
+### 🎥 신입 가이드 (Guide : YouTube 영상)
+
 <img width="420" height="420" alt="가이드 영상 목록" src="https://github.com/user-attachments/assets/86d10420-74d5-4b97-aa67-596083d48988" />
 <img width="420" height="420" alt="가이드 추가" src="https://github.com/user-attachments/assets/4f56a15e-6fb7-460c-b526-c63698602ff0" />
 
-
-### 🎥 신입 가이드 (Guide : YouTube 영상)
 
 | 구분 | 메서드 | URI | 설명 |
 | --- | --- | --- | --- |
@@ -135,9 +135,10 @@
 
 ---
 
+### 👤 사용자 (User)
+
 <img width="420" height="420" alt="로그인" src="https://github.com/user-attachments/assets/12449b47-99aa-4e5f-9337-c8c91874ecad" />
 
-### 👤 사용자 (User)
 
 | 구분 | 메서드 | URI | 설명 |
 | --- | --- | --- | --- |
