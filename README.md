@@ -167,7 +167,7 @@
 
 ---
 
-## 📌 전체 특징
+## 📌 전체 특징 요약
 
 -  **도메인별 Controller / Service / Mapper / DTO 구조 분리**
 -  **RESTful + Thymeleaf 하이브리드 구성**
