@@ -98,7 +98,7 @@
 
 <img width="420" height="420" alt="이벤트메인" src="https://github.com/user-attachments/assets/626fcb1a-c275-4cb8-86d3-4d2bd8397360" />
 <img width="420" height="420" alt="이벤트목록" src="https://github.com/user-attachments/assets/847e4fa4-4c05-4feb-810d-b4a4374397b8" />
-<img width="420" height="420" alt="이벤트 내용 상세보기" src="https://github.com/user-attachments/assets/1bee8794-fcf6-436a-b06e-707421c4e0e1" />
+<img width="420" height="720" alt="이벤트 내용 상세보기" src="https://github.com/user-attachments/assets/1bee8794-fcf6-436a-b06e-707421c4e0e1" />
 
 
 | 구분 | 메서드 | URI | 설명 |
