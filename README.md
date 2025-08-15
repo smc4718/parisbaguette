@@ -48,7 +48,6 @@
 <img width="400" height="400" alt="공지 메인" src="https://github.com/user-attachments/assets/afbd2f91-4e01-4637-a4e4-55f15584b945" />
 <img width="400" height="400" alt="게시글 상세22" src="https://github.com/user-attachments/assets/842b6018-e488-45e1-8d61-27e83ad5a573" />
 
-<br>
 
 | 구분          | 메서드 | URI                                 | 설명                                   |
 |---------------|--------|-------------------------------------|----------------------------------------|
