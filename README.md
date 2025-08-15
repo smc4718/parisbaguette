@@ -94,6 +94,11 @@
 
 ---
 
+<img width="420" height="420" alt="이벤트메인" src="https://github.com/user-attachments/assets/626fcb1a-c275-4cb8-86d3-4d2bd8397360" />
+<img width="420" height="420" alt="이벤트목록" src="https://github.com/user-attachments/assets/847e4fa4-4c05-4feb-810d-b4a4374397b8" />
+<img width="420" height="420" alt="이벤트 내용 상세보기" src="https://github.com/user-attachments/assets/1bee8794-fcf6-436a-b06e-707421c4e0e1" />
+
+
 ### 🎉 이벤트 (Event)
 
 | 구분 | 메서드 | URI | 설명 |
@@ -110,6 +115,10 @@
 
 ---
 
+<img width="420" height="420" alt="가이드 영상 목록" src="https://github.com/user-attachments/assets/86d10420-74d5-4b97-aa67-596083d48988" />
+<img width="420" height="420" alt="가이드 추가" src="https://github.com/user-attachments/assets/4f56a15e-6fb7-460c-b526-c63698602ff0" />
+
+
 ### 🎥 신입 가이드 (Guide : YouTube 영상)
 
 | 구분 | 메서드 | URI | 설명 |
@@ -125,6 +134,8 @@
 - 등록 시 제목/설명/ID DB에 저장
 
 ---
+
+<img width="420" height="420" alt="로그인" src="https://github.com/user-attachments/assets/12449b47-99aa-4e5f-9337-c8c91874ecad" />
 
 ### 👤 사용자 (User)
 
