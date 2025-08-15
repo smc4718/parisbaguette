@@ -137,7 +137,7 @@
 
 ### 👤 사용자 (User)
 
-<img width="420" height="420" alt="로그인" src="https://github.com/user-attachments/assets/12449b47-99aa-4e5f-9337-c8c91874ecad" />
+<img width="420" height="720" alt="로그인" src="https://github.com/user-attachments/assets/12449b47-99aa-4e5f-9337-c8c91874ecad" />
 
 
 | 구분 | 메서드 | URI | 설명 |
