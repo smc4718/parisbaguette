@@ -69,6 +69,11 @@
 
 ---
 
+<img width="420" height="420" alt="휴가 예약 메인" src="https://github.com/user-attachments/assets/221867a5-a2cc-45e2-878f-c5dcfffc88ae" />
+<img width="420" height="420" alt="휴가 예약" src="https://github.com/user-attachments/assets/bd4b04c0-28b2-47b0-b373-10eac14e2dfc" />
+<img width="420" height="420" alt="휴가관리" src="https://github.com/user-attachments/assets/9d4095fc-552f-4415-b168-2498b952981a" />
+
+
 ### 🗓 휴가 예약 (Reservation)
 
 | 구분         | 메서드 | URI                    | 설명                                      |
